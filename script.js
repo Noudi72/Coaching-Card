@@ -382,22 +382,28 @@ function populatePlayerSelect(select, position) {
 // Initialize all selects
 function initializeSelects() {
     const allSelects = document.querySelectorAll('.player-select');
-    allSelects.forEach(select => {
+    console.log('🔧 Initialisiere', allSelects.length, 'Selects...');
+    allSelects.forEach((select, index) => {
         const position = select.getAttribute('data-position') || 
                         select.getAttribute('data-pos') || 
                         select.getAttribute('data-unit');
         populatePlayerSelect(select, position);
         
-        // Farbauswahl per Doppelklick hinzufügen
+        // Farbauswahl-Button hinzufügen
         setupColorPicker(select);
     });
+    console.log('✅ Selects initialisiert');
 }
 
 // Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
 function setupColorPicker(select) {
     // Prüfe ob bereits ein Wrapper existiert
-    if (select.parentElement.classList.contains('select-color-wrapper')) {
-        return; // Bereits eingerichtet
+    if (select.parentElement && select.parentElement.classList.contains('select-color-wrapper')) {
+        // Button sollte bereits existieren, prüfe ob er da ist
+        const existingBtn = select.parentElement.querySelector('.color-picker-btn');
+        if (existingBtn) {
+            return; // Bereits eingerichtet
+        }
     }
     
     // Erstelle Wrapper um Select + Button
@@ -499,6 +505,15 @@ if (teamSelectEl) {
         saveLineups(); // Speichere vor Team-Wechsel
         currentTeam = e.target.value;
         initializeSelects();
+        // Stelle sicher, dass Buttons erstellt wurden
+        setTimeout(() => {
+            const selects = document.querySelectorAll('.player-select');
+            const buttons = document.querySelectorAll('.color-picker-btn');
+            if (buttons.length < selects.length) {
+                console.log('⚠️ Buttons fehlen nach Team-Wechsel, erstelle neu...');
+                initializeSelects();
+            }
+        }, 100);
         loadLineups(); // Lade Lineups für neues Team
     });
 }
@@ -707,29 +722,28 @@ document.addEventListener('DOMContentLoaded', () => {
     loadRosters();
     setupAutoSave(); // Einmalig einrichten
     openStartScreen();
-    initializeSelects();
     setDefaultDate();
-    // Warte bis Selects initialisiert sind, dann lade Lineups
-    // Längerer Timeout, damit sicher alle Selects initialisiert sind
+    // Warte bis DOM vollständig geladen ist
     setTimeout(() => {
-        console.log('🔄 Starte Laden der Lineups...');
-        loadLineups(); // Lade gespeicherte Lineups
-        applyTextAlignment();
-        // Test: Zeige was im localStorage steht
+        console.log('🔄 Initialisiere Selects und lade Lineups...');
+        initializeSelects(); // Initialisiere Selects
+        // Warte bis Selects initialisiert sind, dann lade Lineups
         setTimeout(() => {
-            console.log('🔍 Test: Was steht im localStorage?');
-            window.testLineups();
-            // Prüfe ob Werte wirklich gesetzt wurden
-            const testSelects = document.querySelectorAll('.player-select');
-            let setCount = 0;
-            testSelects.forEach(select => {
-                if (select.value && select.value !== '') {
-                    setCount++;
+            console.log('🔄 Starte Laden der Lineups...');
+            loadLineups(); // Lade gespeicherte Lineups
+            applyTextAlignment();
+            // Stelle sicher, dass alle Buttons erstellt wurden
+            setTimeout(() => {
+                const selects = document.querySelectorAll('.player-select');
+                const buttons = document.querySelectorAll('.color-picker-btn');
+                console.log(`🔍 Prüfung: ${selects.length} Selects, ${buttons.length} Buttons`);
+                if (buttons.length < selects.length) {
+                    console.log('⚠️ Nicht alle Buttons wurden erstellt, versuche erneut...');
+                    initializeSelects();
                 }
-            });
-            console.log(`✅ Anzahl Selects mit Wert: ${setCount} von ${testSelects.length}`);
-        }, 100);
-    }, 800); // Noch längeres Timeout für sicherere Initialisierung
+            }, 200);
+        }, 200);
+    }, 100);
     wireHeaderBackButton();
     wirePrintButton();
     wireSaveButton();
