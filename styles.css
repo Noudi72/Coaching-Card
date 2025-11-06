@@ -37,6 +37,7 @@ body {
 .roster-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .roster-table th, .roster-table td { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; }
 .roster-table input, .roster-table select { width: 100%; padding: 6px; box-sizing: border-box; }
+.roster-table input[type="color"] { width: 60px; height: 32px; padding: 2px; cursor: pointer; }
 .roster-table td:last-child { width: 44px; }
 .roster-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
 
@@ -894,6 +895,15 @@ body {
         -webkit-appearance: none !important;
         -moz-appearance: none !important;
         appearance: none !important;
+        /* Farben beim Drucken beibehalten */
+        color: inherit !important;
+    }
+    
+    /* Farben in Optionen beim Drucken beibehalten */
+    select option {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color: inherit !important;
     }
     
     /* Dropdown-Pfeile für verschiedene Browser ausblenden */

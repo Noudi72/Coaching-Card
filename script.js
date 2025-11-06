@@ -226,6 +226,11 @@ function loadLineupsData(data) {
                 const optionExists = Array.from(select.options).some(opt => opt.value === savedValue);
                 if (optionExists) {
                     select.value = savedValue;
+                    // Setze Farbe basierend auf der ausgewählten Option
+                    const selectedOption = select.options[select.selectedIndex];
+                    if (selectedOption && selectedOption.style.color) {
+                        select.style.color = selectedOption.style.color;
+                    }
                     loadedCount++;
                     console.log(`✓ Geladen: ${key} = ${savedValue}`);
                 } else {
@@ -234,6 +239,11 @@ function loadLineupsData(data) {
                         select.value = savedValue;
                         // Prüfe ob es wirklich gesetzt wurde
                         if (select.value === savedValue) {
+                            // Setze Farbe basierend auf der ausgewählten Option
+                            const selectedOption = select.options[select.selectedIndex];
+                            if (selectedOption && selectedOption.style.color) {
+                                select.style.color = selectedOption.style.color;
+                            }
                             loadedCount++;
                             console.log(`✓ Geladen (direkt): ${key} = ${savedValue}`);
                         } else {
@@ -323,18 +333,38 @@ function populatePlayerSelect(select, position) {
     // Add empty option
     select.innerHTML = '<option value="">-</option>';
 
-    // Add players
+    // Add players with colors
     allPlayers.forEach(player => {
         const option = document.createElement('option');
-        option.value = `${player.number} ${player.name}`;
-        option.textContent = `${player.number} ${player.name}`;
+        const playerValue = `${player.number} ${player.name}`;
+        option.value = playerValue;
+        option.textContent = playerValue;
+        // Setze Farbe für die Option
+        if (player.color && player.color !== '#000000') {
+            option.style.color = player.color;
+        }
         select.appendChild(option);
     });
     
     // Stelle den vorherigen Wert wieder her, falls er noch existiert
     if (currentValue && Array.from(select.options).some(opt => opt.value === currentValue)) {
         select.value = currentValue;
+        // Setze auch die Farbe des Selects basierend auf der ausgewählten Option
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption && selectedOption.style.color) {
+            select.style.color = selectedOption.style.color;
+        }
     }
+    
+    // Event Listener für Farbänderung beim Auswählen
+    select.addEventListener('change', () => {
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption && selectedOption.style.color) {
+            select.style.color = selectedOption.style.color;
+        } else {
+            select.style.color = '';
+        }
+    });
 }
 
 // Initialize all selects
@@ -423,24 +453,26 @@ function applyTextAlignment() {
 }
 
 // Start screen logic
-function buildRosterRow(player = { number: '', name: '', pos: 'F' }) {
+function buildRosterRow(player = { number: '', name: '', pos: 'F', color: '#000000' }) {
     const tr = document.createElement('tr');
     const tdNum = document.createElement('td');
     const tdName = document.createElement('td');
     const tdPos = document.createElement('td');
+    const tdColor = document.createElement('td');
     const tdDel = document.createElement('td');
 
     tdNum.innerHTML = `<input type="number" min="0" value="${player.number ?? ''}">`;
     tdName.innerHTML = `<input type="text" value="${player.name ?? ''}">`;
     tdPos.innerHTML = `<select><option value="F">F</option><option value="D">D</option><option value="G">G</option></select>`;
     tdPos.querySelector('select').value = player.pos || (player.isGoalie ? 'G' : 'F');
+    tdColor.innerHTML = `<input type="color" value="${player.color || '#000000'}">`;
     const delBtn = document.createElement('button');
     delBtn.textContent = '✕';
     delBtn.className = 'start-btn secondary';
     delBtn.onclick = () => tr.remove();
     tdDel.appendChild(delBtn);
 
-    tr.append(tdNum, tdName, tdPos, tdDel);
+    tr.append(tdNum, tdName, tdPos, tdColor, tdDel);
     return tr;
 }
 
@@ -455,9 +487,9 @@ function openStartScreen() {
         rosterTableBody.innerHTML = '';
         const team = rosters[teamKey];
         const rows = [];
-        team.offense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'F' }));
-        team.defense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'D' }));
-        team.goalies.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'G' }));
+        team.offense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'F', color: p.color || '#000000' }));
+        team.defense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'D', color: p.color || '#000000' }));
+        team.goalies.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'G', color: p.color || '#000000' }));
         rows.forEach(p => rosterTableBody.appendChild(buildRosterRow(p)));
     }
 
@@ -476,14 +508,15 @@ function openStartScreen() {
     document.getElementById('save-roster').addEventListener('click', () => {
         const newOff = []; const newDef = []; const newGol = [];
         rosterTableBody.querySelectorAll('tr').forEach(tr => {
-            const [numEl, nameEl, posEl] = tr.querySelectorAll('input, select');
+            const [numEl, nameEl, posEl, colorEl] = tr.querySelectorAll('input, select');
             const num = parseInt(numEl.value, 10) || '';
             const name = nameEl.value.trim();
             const pos = posEl.value;
+            const color = colorEl.value || '#000000';
             if (!name) return;
-            if (pos === 'G') newGol.push({ number: num, name });
-            else if (pos === 'D') newDef.push({ number: num, name });
-            else newOff.push({ number: num, name });
+            if (pos === 'G') newGol.push({ number: num, name, color });
+            else if (pos === 'D') newDef.push({ number: num, name, color });
+            else newOff.push({ number: num, name, color });
         });
         rosters[editorTeam] = { offense: newOff, defense: newDef, goalies: newGol };
         saveRosters();
