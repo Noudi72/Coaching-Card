@@ -258,22 +258,6 @@ function loadLineupsData(data) {
             // Lade Farbe für dieses Feld
             if (colorsData[key]) {
                 select.style.color = colorsData[key];
-                // Aktualisiere auch das Farb-Dropdown, falls vorhanden
-                const colorSelect = select.nextElementSibling;
-                if (colorSelect && colorSelect.classList.contains('color-select')) {
-                    const color = colorsData[key];
-                    if (color === '#000000' || color === 'rgb(0, 0, 0)' || color === 'black') {
-                        colorSelect.value = '#000000';
-                    } else if (color === '#FF0000' || color === 'rgb(255, 0, 0)' || color === 'red') {
-                        colorSelect.value = '#FF0000';
-                    } else if (color === '#FFFF00' || color === 'rgb(255, 255, 0)' || color === 'yellow') {
-                        colorSelect.value = '#FFFF00';
-                    } else if (color === '#00FF00' || color === 'rgb(0, 255, 0)' || color === 'lime' || color === 'green') {
-                        colorSelect.value = '#00FF00';
-                    } else {
-                        colorSelect.value = '';
-                    }
-                }
             }
             
             if (savedValue) {
@@ -411,57 +395,72 @@ function initializeSelects() {
         allSelects.forEach(select => {
             setupColorPicker(select);
         });
-        const colorSelects = document.querySelectorAll('.color-select');
-        console.log('✅ Selects initialisiert,', colorSelects.length, 'Farb-Dropdowns erstellt');
+        console.log('✅ Selects initialisiert, Farbauswahl eingerichtet');
     }, 50);
 }
 
-// Farbauswahl für Dropdown-Felder - 4 vordefinierte Farben
+// Globale Variable für aktuell ausgewähltes Feld
+let selectedField = null;
+
+// Farbauswahl für Dropdown-Felder - zentrale Farbauswahl im Header
 function setupColorPicker(select) {
-    // Prüfe ob Dropdown bereits existiert (direkt nach dem Select)
-    let colorSelect = select.nextElementSibling;
-    
-    if (colorSelect && colorSelect.classList.contains('color-select')) {
-        // Dropdown existiert bereits - aktualisiere nur die Farbe
-        updateSelectColor(select, colorSelect.value);
-        return;
+    // Entferne alte Farb-Dropdowns, falls vorhanden
+    const oldColorSelect = select.nextElementSibling;
+    if (oldColorSelect && oldColorSelect.classList.contains('color-select')) {
+        oldColorSelect.remove();
     }
     
-    // Erstelle Farb-Dropdown direkt nach dem Select
-    colorSelect = document.createElement('select');
-    colorSelect.className = 'color-select';
-    colorSelect.innerHTML = `
-        <option value="">⚪</option>
-        <option value="#000000">⚫</option>
-        <option value="#FF0000">🔴</option>
-        <option value="#FFFF00">🟡</option>
-        <option value="#00FF00">🟢</option>
-    `;
-    colorSelect.title = 'Farbe wählen';
-    
-    // Setze aktuelle Farbe im Dropdown
-    const currentColor = select.style.color || '';
-    if (currentColor === '#000000' || currentColor === 'rgb(0, 0, 0)' || currentColor === 'black') {
-        colorSelect.value = '#000000';
-    } else if (currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
-        colorSelect.value = '#FF0000';
-    } else if (currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow') {
-        colorSelect.value = '#FFFF00';
-    } else if (currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green') {
-        colorSelect.value = '#00FF00';
-    } else {
-        colorSelect.value = '';
-    }
-    
-    // Füge Dropdown direkt nach dem Select ein
-    select.parentNode.insertBefore(colorSelect, select.nextSibling);
-    
-    // Event Listener für Farbänderung
-    colorSelect.addEventListener('change', (e) => {
-        const color = e.target.value;
-        updateSelectColor(select, color);
-        saveLineups();
+    // Event Listener für Feld-Auswahl hinzufügen
+    select.addEventListener('focus', () => {
+        selectedField = select;
+        updateColorButtons();
     });
+    
+    select.addEventListener('click', () => {
+        selectedField = select;
+        updateColorButtons();
+    });
+}
+
+function updateColorButtons() {
+    // Entferne aktive Klasse von allen Buttons
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Setze aktive Klasse basierend auf aktueller Farbe
+    if (selectedField) {
+        const currentColor = selectedField.style.color || '';
+        let matchingBtn = null;
+        
+        if (!currentColor || currentColor === '') {
+            matchingBtn = document.querySelector('.color-btn[data-color=""]');
+        } else if (currentColor === '#000000' || currentColor === 'rgb(0, 0, 0)' || currentColor === 'black') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#000000"]');
+        } else if (currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#FF0000"]');
+        } else if (currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#FFFF00"]');
+        } else if (currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#00FF00"]');
+        }
+        
+        if (matchingBtn) {
+            matchingBtn.classList.add('active');
+        }
+    }
+}
+
+function applyColorToSelectedField(color) {
+    if (selectedField) {
+        if (color && color !== '') {
+            selectedField.style.color = color;
+        } else {
+            selectedField.style.color = '';
+        }
+        saveLineups();
+        updateColorButtons();
+    }
 }
 
 function updateSelectColor(select, color) {
@@ -469,12 +468,6 @@ function updateSelectColor(select, color) {
         select.style.color = color;
     } else {
         select.style.color = '';
-    }
-    
-    // Aktualisiere auch das Farb-Dropdown, falls vorhanden
-    const colorSelect = select.nextElementSibling;
-    if (colorSelect && colorSelect.classList.contains('color-select')) {
-        colorSelect.value = color || '';
     }
 }
 
@@ -485,14 +478,9 @@ if (teamSelectEl) {
         saveLineups(); // Speichere vor Team-Wechsel
         currentTeam = e.target.value;
         initializeSelects();
-        // Stelle sicher, dass Farb-Dropdowns erstellt wurden
+        // Stelle sicher, dass Selects initialisiert wurden
         setTimeout(() => {
-            const selects = document.querySelectorAll('.player-select');
-            const colorSelects = document.querySelectorAll('.color-select');
-            if (colorSelects.length < selects.length) {
-                console.log('⚠️ Farb-Dropdowns fehlen nach Team-Wechsel, erstelle neu...');
-                initializeSelects();
-            }
+            initializeSelects();
         }, 100);
         loadLineups(); // Lade Lineups für neues Team
     });
@@ -632,13 +620,7 @@ function openStartScreen() {
         console.log('💾 Roster gespeichert, initialisiere Selects...');
         initializeSelects();
         setTimeout(() => {
-            const selects = document.querySelectorAll('.player-select');
-            const colorSelects = document.querySelectorAll('.color-select');
-            console.log(`🔍 Nach Roster-Speichern: ${selects.length} Selects, ${colorSelects.length} Farb-Dropdowns`);
-            if (colorSelects.length < selects.length) {
-                console.log('⚠️ Farb-Dropdowns fehlen, erstelle erneut...');
-                initializeSelects();
-            }
+            initializeSelects();
         }, 100);
         setTimeout(applyTextAlignment, 100);
     });
@@ -737,5 +719,16 @@ document.addEventListener('DOMContentLoaded', () => {
     wireHeaderBackButton();
     wirePrintButton();
     wireSaveButton();
+    wireColorButtons();
 });
+
+// Event Listener für Farb-Buttons im Header
+function wireColorButtons() {
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const color = e.target.getAttribute('data-color');
+            applyColorToSelectedField(color);
+        });
+    });
+}
 

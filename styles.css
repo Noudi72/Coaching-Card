@@ -67,6 +67,49 @@ body {
 #open-start { background: #666; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; }
 #print-btn { background: #1976d2; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; }
 
+/* Farbauswahl im Header */
+.color-picker-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 12px;
+    padding: 4px 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.color-label {
+    font-size: 12px;
+    margin-right: 4px;
+    color: #666;
+}
+
+.color-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.color-btn:hover {
+    border-color: #999;
+    transform: scale(1.1);
+}
+
+.color-btn.active {
+    border-color: #1976d2;
+    border-width: 3px;
+    box-shadow: 0 0 4px rgba(25, 118, 210, 0.5);
+}
+
 /* Page Setup für A4 Querformat */
 .page {
     width: 297mm;
