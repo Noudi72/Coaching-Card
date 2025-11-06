@@ -258,6 +258,11 @@ function loadLineupsData(data) {
             // Lade Farbe für dieses Feld
             if (colorsData[key]) {
                 select.style.color = colorsData[key];
+                // Aktualisiere auch den Button, falls vorhanden
+                const colorBtn = select.nextElementSibling;
+                if (colorBtn && colorBtn.classList.contains('color-picker-btn')) {
+                    updateButtonColor(colorBtn, select);
+                }
             }
             
             if (savedValue) {
@@ -403,13 +408,39 @@ function initializeSelects() {
 // Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
 function setupColorPicker(select) {
     // Prüfe ob Button bereits existiert (direkt nach dem Select)
-    const nextSibling = select.nextElementSibling;
-    if (nextSibling && nextSibling.classList.contains('color-picker-btn')) {
-        return; // Bereits eingerichtet
+    let colorBtn = select.nextElementSibling;
+    
+    if (colorBtn && colorBtn.classList.contains('color-picker-btn')) {
+        // Button existiert bereits - aktualisiere nur die Farbe und stelle sicher, dass Event Listener vorhanden ist
+        updateButtonColor(colorBtn, select);
+        
+        // Prüfe ob Event Listener bereits vorhanden ist
+        if (!colorBtn.hasAttribute('data-listener-attached')) {
+            colorBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openColorPicker(select, colorBtn);
+            });
+            colorBtn.setAttribute('data-listener-attached', 'true');
+        }
+        
+        // Stelle sicher, dass MutationObserver aktiv ist
+        if (!select.hasAttribute('data-observer-attached')) {
+            const observer = new MutationObserver(() => {
+                updateButtonColor(colorBtn, select);
+            });
+            observer.observe(select, { 
+                attributes: true, 
+                attributeFilter: ['style'] 
+            });
+            select.setAttribute('data-observer-attached', 'true');
+        }
+        
+        return;
     }
     
-    // Erstelle Farb-Button direkt nach dem Select
-    const colorBtn = document.createElement('button');
+    // Erstelle neuen Farb-Button direkt nach dem Select
+    colorBtn = document.createElement('button');
     colorBtn.type = 'button';
     colorBtn.className = 'color-picker-btn';
     colorBtn.innerHTML = '🎨';
@@ -432,6 +463,7 @@ function setupColorPicker(select) {
         e.stopPropagation();
         openColorPicker(select, colorBtn);
     });
+    colorBtn.setAttribute('data-listener-attached', 'true');
     
     // Update Button-Farbe wenn Select-Farbe geändert wird
     const observer = new MutationObserver(() => {
@@ -442,6 +474,7 @@ function setupColorPicker(select) {
         attributes: true, 
         attributeFilter: ['style'] 
     });
+    select.setAttribute('data-observer-attached', 'true');
 }
 
 function updateButtonColor(btn, select) {
