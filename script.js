@@ -395,21 +395,61 @@ function initializeSelects() {
 
 // Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
 function setupColorPicker(select) {
-    // Doppelklick öffnet Farbpicker
-    select.addEventListener('dblclick', (e) => {
+    // Prüfe ob bereits ein Wrapper existiert
+    if (select.parentElement.classList.contains('select-color-wrapper')) {
+        return; // Bereits eingerichtet
+    }
+    
+    // Erstelle Wrapper um Select + Button
+    const wrapper = document.createElement('div');
+    wrapper.className = 'select-color-wrapper';
+    wrapper.style.cssText = 'display: flex; align-items: center; gap: 2px; flex: 1 1 0; min-width: 0;';
+    
+    // Verschiebe Select in Wrapper
+    select.parentNode.insertBefore(wrapper, select);
+    wrapper.appendChild(select);
+    
+    // Erstelle Farb-Button
+    const colorBtn = document.createElement('button');
+    colorBtn.type = 'button';
+    colorBtn.className = 'color-picker-btn';
+    colorBtn.innerHTML = '🎨';
+    colorBtn.title = 'Farbe ändern';
+    
+    // Setze aktuelle Farbe als Hintergrund
+    if (select.style.color) {
+        colorBtn.style.backgroundColor = select.style.color;
+        colorBtn.style.color = select.style.color;
+    }
+    
+    // Füge Button zum Wrapper hinzu
+    wrapper.appendChild(colorBtn);
+    
+    // Event Listener für Button-Klick
+    colorBtn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        openColorPicker(select);
+        openColorPicker(select, colorBtn);
     });
     
-    // Rechtsklick öffnet auch Farbpicker (optional)
-    select.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        openColorPicker(select);
+    // Update Button-Farbe wenn Select-Farbe geändert wird
+    const observer = new MutationObserver(() => {
+        if (select.style.color) {
+            colorBtn.style.backgroundColor = select.style.color;
+            colorBtn.style.color = select.style.color;
+        } else {
+            colorBtn.style.backgroundColor = 'white';
+            colorBtn.style.color = '#000';
+        }
+    });
+    
+    observer.observe(select, { 
+        attributes: true, 
+        attributeFilter: ['style'] 
     });
 }
 
-function openColorPicker(select) {
+function openColorPicker(select, colorBtn) {
     // Erstelle temporären Farbpicker
     const colorInput = document.createElement('input');
     colorInput.type = 'color';
@@ -427,8 +467,16 @@ function openColorPicker(select) {
         if (color === '#000000') {
             // Schwarz = Standard, entferne Farbe
             select.style.color = '';
+            if (colorBtn) {
+                colorBtn.style.backgroundColor = 'white';
+                colorBtn.style.color = '#000';
+            }
         } else {
             select.style.color = color;
+            if (colorBtn) {
+                colorBtn.style.backgroundColor = color;
+                colorBtn.style.color = color;
+            }
         }
         saveLineups(); // Speichere automatisch
         document.body.removeChild(colorInput);

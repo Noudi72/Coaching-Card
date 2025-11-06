@@ -305,15 +305,18 @@ body {
     align-items: center;
 }
 
+/* Wrapper in Grid-Layouts */
+.line-complete .defense .select-color-wrapper,
+.goalies .select-color-wrapper {
+    width: 100%;
+}
+
 .line-complete .defense .line-number {
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
 }
-
-/* ensure grid children fill columns */
-.line-complete .defense select { width: 100%; }
 
 /* Ensure selects fill their slots */
 .line-complete select,
@@ -337,6 +340,43 @@ body {
     box-sizing: border-box;
     cursor: pointer;
     transition: background-color 0.2s;
+}
+
+/* Wrapper für Select + Farb-Button */
+.select-color-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.select-color-wrapper .player-select {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Farb-Button neben Select */
+.color-picker-btn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.color-picker-btn:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
 }
 
 /* Hinweis für Farbauswahl per Doppelklick */
@@ -907,6 +947,11 @@ body {
         appearance: none !important;
         /* Farben beim Drucken beibehalten */
         color: inherit !important;
+    }
+    
+    /* Farb-Buttons beim Drucken ausblenden */
+    .color-picker-btn {
+        display: none !important;
     }
     
     /* Farben in Optionen beim Drucken beibehalten */
