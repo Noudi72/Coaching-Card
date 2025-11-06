@@ -258,10 +258,21 @@ function loadLineupsData(data) {
             // Lade Farbe für dieses Feld
             if (colorsData[key]) {
                 select.style.color = colorsData[key];
-                // Aktualisiere auch den Button, falls vorhanden
-                const colorBtn = select.nextElementSibling;
-                if (colorBtn && colorBtn.classList.contains('color-picker-btn')) {
-                    updateButtonColor(colorBtn, select);
+                // Aktualisiere auch das Farb-Dropdown, falls vorhanden
+                const colorSelect = select.nextElementSibling;
+                if (colorSelect && colorSelect.classList.contains('color-select')) {
+                    const color = colorsData[key];
+                    if (color === '#000000' || color === 'rgb(0, 0, 0)' || color === 'black') {
+                        colorSelect.value = '#000000';
+                    } else if (color === '#FF0000' || color === 'rgb(255, 0, 0)' || color === 'red') {
+                        colorSelect.value = '#FF0000';
+                    } else if (color === '#FFFF00' || color === 'rgb(255, 255, 0)' || color === 'yellow') {
+                        colorSelect.value = '#FFFF00';
+                    } else if (color === '#00FF00' || color === 'rgb(0, 255, 0)' || color === 'lime' || color === 'green') {
+                        colorSelect.value = '#00FF00';
+                    } else {
+                        colorSelect.value = '';
+                    }
                 }
             }
             
@@ -395,139 +406,76 @@ function initializeSelects() {
         populatePlayerSelect(select, position);
     });
     
-    // Buttons nach dem Populieren hinzufügen
+    // Farb-Dropdowns nach dem Populieren hinzufügen
     setTimeout(() => {
         allSelects.forEach(select => {
             setupColorPicker(select);
         });
-        const buttons = document.querySelectorAll('.color-picker-btn');
-        console.log('✅ Selects initialisiert,', buttons.length, 'Farb-Buttons erstellt');
+        const colorSelects = document.querySelectorAll('.color-select');
+        console.log('✅ Selects initialisiert,', colorSelects.length, 'Farb-Dropdowns erstellt');
     }, 50);
 }
 
-// Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
+// Farbauswahl für Dropdown-Felder - 4 vordefinierte Farben
 function setupColorPicker(select) {
-    // Prüfe ob Button bereits existiert (direkt nach dem Select)
-    let colorBtn = select.nextElementSibling;
+    // Prüfe ob Dropdown bereits existiert (direkt nach dem Select)
+    let colorSelect = select.nextElementSibling;
     
-    if (colorBtn && colorBtn.classList.contains('color-picker-btn')) {
-        // Button existiert bereits - aktualisiere nur die Farbe und stelle sicher, dass Event Listener vorhanden ist
-        updateButtonColor(colorBtn, select);
-        
-        // Prüfe ob Event Listener bereits vorhanden ist
-        if (!colorBtn.hasAttribute('data-listener-attached')) {
-            colorBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                openColorPicker(select, colorBtn);
-            });
-            colorBtn.setAttribute('data-listener-attached', 'true');
-        }
-        
-        // Stelle sicher, dass MutationObserver aktiv ist
-        if (!select.hasAttribute('data-observer-attached')) {
-            const observer = new MutationObserver(() => {
-                updateButtonColor(colorBtn, select);
-            });
-            observer.observe(select, { 
-                attributes: true, 
-                attributeFilter: ['style'] 
-            });
-            select.setAttribute('data-observer-attached', 'true');
-        }
-        
+    if (colorSelect && colorSelect.classList.contains('color-select')) {
+        // Dropdown existiert bereits - aktualisiere nur die Farbe
+        updateSelectColor(select, colorSelect.value);
         return;
     }
     
-    // Erstelle neuen Farb-Button direkt nach dem Select
-    colorBtn = document.createElement('button');
-    colorBtn.type = 'button';
-    colorBtn.className = 'color-picker-btn';
-    colorBtn.innerHTML = '🎨';
-    colorBtn.title = 'Farbe ändern';
-    colorBtn.setAttribute('data-select-id', select.getAttribute('data-position') || 
-                                         select.getAttribute('data-pos') || 
-                                         select.getAttribute('data-line') || 
-                                         select.getAttribute('data-unit') || 
-                                         'unknown');
+    // Erstelle Farb-Dropdown direkt nach dem Select
+    colorSelect = document.createElement('select');
+    colorSelect.className = 'color-select';
+    colorSelect.innerHTML = `
+        <option value="">⚪</option>
+        <option value="#000000">⚫</option>
+        <option value="#FF0000">🔴</option>
+        <option value="#FFFF00">🟡</option>
+        <option value="#00FF00">🟢</option>
+    `;
+    colorSelect.title = 'Farbe wählen';
     
-    // Setze aktuelle Farbe als Hintergrund
-    updateButtonColor(colorBtn, select);
-    
-    // Füge Button direkt nach dem Select ein
-    select.parentNode.insertBefore(colorBtn, select.nextSibling);
-    
-    // Event Listener für Button-Klick
-    colorBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        openColorPicker(select, colorBtn);
-    });
-    colorBtn.setAttribute('data-listener-attached', 'true');
-    
-    // Update Button-Farbe wenn Select-Farbe geändert wird
-    const observer = new MutationObserver(() => {
-        updateButtonColor(colorBtn, select);
-    });
-    
-    observer.observe(select, { 
-        attributes: true, 
-        attributeFilter: ['style'] 
-    });
-    select.setAttribute('data-observer-attached', 'true');
-}
-
-function updateButtonColor(btn, select) {
-    if (select.style.color && select.style.color !== '') {
-        btn.style.backgroundColor = select.style.color;
-        btn.style.color = select.style.color;
+    // Setze aktuelle Farbe im Dropdown
+    const currentColor = select.style.color || '';
+    if (currentColor === '#000000' || currentColor === 'rgb(0, 0, 0)' || currentColor === 'black') {
+        colorSelect.value = '#000000';
+    } else if (currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
+        colorSelect.value = '#FF0000';
+    } else if (currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow') {
+        colorSelect.value = '#FFFF00';
+    } else if (currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green') {
+        colorSelect.value = '#00FF00';
     } else {
-        btn.style.backgroundColor = 'white';
-        btn.style.color = '#000';
+        colorSelect.value = '';
     }
+    
+    // Füge Dropdown direkt nach dem Select ein
+    select.parentNode.insertBefore(colorSelect, select.nextSibling);
+    
+    // Event Listener für Farbänderung
+    colorSelect.addEventListener('change', (e) => {
+        const color = e.target.value;
+        updateSelectColor(select, color);
+        saveLineups();
+    });
 }
 
-function openColorPicker(select, colorBtn) {
-    // Erstelle temporären Farbpicker
-    const colorInput = document.createElement('input');
-    colorInput.type = 'color';
-    colorInput.value = select.style.color || '#000000';
-    colorInput.style.position = 'fixed';
-    colorInput.style.opacity = '0';
-    colorInput.style.pointerEvents = 'none';
-    colorInput.style.width = '1px';
-    colorInput.style.height = '1px';
+function updateSelectColor(select, color) {
+    if (color && color !== '') {
+        select.style.color = color;
+    } else {
+        select.style.color = '';
+    }
     
-    document.body.appendChild(colorInput);
-    
-    colorInput.addEventListener('change', () => {
-        const color = colorInput.value;
-        if (color === '#000000') {
-            // Schwarz = Standard, entferne Farbe
-            select.style.color = '';
-            if (colorBtn) {
-                colorBtn.style.backgroundColor = 'white';
-                colorBtn.style.color = '#000';
-            }
-        } else {
-            select.style.color = color;
-            if (colorBtn) {
-                colorBtn.style.backgroundColor = color;
-                colorBtn.style.color = color;
-            }
-        }
-        saveLineups(); // Speichere automatisch
-        document.body.removeChild(colorInput);
-    });
-    
-    colorInput.addEventListener('blur', () => {
-        if (document.body.contains(colorInput)) {
-            document.body.removeChild(colorInput);
-        }
-    });
-    
-    // Öffne Farbpicker
-    colorInput.click();
+    // Aktualisiere auch das Farb-Dropdown, falls vorhanden
+    const colorSelect = select.nextElementSibling;
+    if (colorSelect && colorSelect.classList.contains('color-select')) {
+        colorSelect.value = color || '';
+    }
 }
 
 // Handle team change
@@ -537,12 +485,12 @@ if (teamSelectEl) {
         saveLineups(); // Speichere vor Team-Wechsel
         currentTeam = e.target.value;
         initializeSelects();
-        // Stelle sicher, dass Buttons erstellt wurden
+        // Stelle sicher, dass Farb-Dropdowns erstellt wurden
         setTimeout(() => {
             const selects = document.querySelectorAll('.player-select');
-            const buttons = document.querySelectorAll('.color-picker-btn');
-            if (buttons.length < selects.length) {
-                console.log('⚠️ Buttons fehlen nach Team-Wechsel, erstelle neu...');
+            const colorSelects = document.querySelectorAll('.color-select');
+            if (colorSelects.length < selects.length) {
+                console.log('⚠️ Farb-Dropdowns fehlen nach Team-Wechsel, erstelle neu...');
                 initializeSelects();
             }
         }, 100);
@@ -685,10 +633,10 @@ function openStartScreen() {
         initializeSelects();
         setTimeout(() => {
             const selects = document.querySelectorAll('.player-select');
-            const buttons = document.querySelectorAll('.color-picker-btn');
-            console.log(`🔍 Nach Roster-Speichern: ${selects.length} Selects, ${buttons.length} Buttons`);
-            if (buttons.length < selects.length) {
-                console.log('⚠️ Buttons fehlen, erstelle erneut...');
+            const colorSelects = document.querySelectorAll('.color-select');
+            console.log(`🔍 Nach Roster-Speichern: ${selects.length} Selects, ${colorSelects.length} Farb-Dropdowns`);
+            if (colorSelects.length < selects.length) {
+                console.log('⚠️ Farb-Dropdowns fehlen, erstelle erneut...');
                 initializeSelects();
             }
         }, 100);
@@ -774,13 +722,13 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('🔄 Starte Laden der Lineups...');
             loadLineups(); // Lade gespeicherte Lineups
             applyTextAlignment();
-            // Stelle sicher, dass alle Buttons erstellt wurden
+            // Stelle sicher, dass alle Farb-Dropdowns erstellt wurden
             setTimeout(() => {
                 const selects = document.querySelectorAll('.player-select');
-                const buttons = document.querySelectorAll('.color-picker-btn');
-                console.log(`🔍 Prüfung: ${selects.length} Selects, ${buttons.length} Buttons`);
-                if (buttons.length < selects.length) {
-                    console.log('⚠️ Nicht alle Buttons wurden erstellt, versuche erneut...');
+                const colorSelects = document.querySelectorAll('.color-select');
+                console.log(`🔍 Prüfung: ${selects.length} Selects, ${colorSelects.length} Farb-Dropdowns`);
+                if (colorSelects.length < selects.length) {
+                    console.log('⚠️ Nicht alle Farb-Dropdowns wurden erstellt, versuche erneut...');
                     initializeSelects();
                 }
             }, 200);

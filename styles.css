@@ -358,17 +358,17 @@ body {
     min-width: 0;
 }
 
-/* Farb-Button neben Select */
-.color-picker-btn {
-    width: 20px !important;
-    height: 20px !important;
-    padding: 0 !important;
+/* Farb-Dropdown neben Select */
+.color-select {
+    width: 30px !important;
+    height: 22px !important;
+    padding: 2px !important;
     margin-left: 2px !important;
     border: 1px solid #ccc !important;
     border-radius: 2px;
     background: white !important;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
     flex-shrink: 0;
     display: inline-block !important;
@@ -378,31 +378,34 @@ body {
     position: relative;
     z-index: 10;
     box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
-/* Buttons in Flex-Layouts */
-.forwards .color-picker-btn,
-.line-complete .color-picker-btn {
+/* Farb-Dropdowns in Flex-Layouts */
+.forwards .color-select,
+.line-complete .color-select {
     display: inline-block !important;
     vertical-align: middle;
 }
 
-/* Buttons in Grid-Layouts */
-.defense .color-picker-btn,
-.goalies .color-picker-btn {
+/* Farb-Dropdowns in Grid-Layouts */
+.defense .color-select,
+.goalies .color-select {
     display: inline-block !important;
     vertical-align: middle;
     grid-column: auto;
 }
 
-/* Buttons in Tabellen */
-.setup-table td .color-picker-btn {
+/* Farb-Dropdowns in Tabellen */
+.setup-table td .color-select {
     display: inline-block !important;
     vertical-align: middle;
     margin-left: 2px;
 }
 
-.color-picker-btn:hover {
+.color-select:hover {
     background-color: #f0f0f0;
     border-color: #999;
 }
@@ -977,8 +980,8 @@ body {
         color: inherit !important;
     }
     
-    /* Farb-Buttons beim Drucken ausblenden */
-    .color-picker-btn {
+    /* Farb-Dropdowns beim Drucken ausblenden */
+    .color-select {
         display: none !important;
     }
     
