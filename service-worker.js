@@ -1,5 +1,5 @@
 // Service Worker für Offline-Funktionalität
-const CACHE_NAME = 'coaching-card-v1';
+const CACHE_NAME = 'coaching-card-v2';
 // Pfade relativ zum Repository-Root (funktioniert auch mit GitHub Pages)
 const basePath = self.location.pathname.replace(/\/[^\/]*$/, '') || '/';
 const urlsToCache = [
@@ -29,27 +29,25 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Fetch Event - Serviere aus Cache wenn offline
+// Fetch Event - Network first, dann Cache (für bessere Updates)
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then((response) => {
-        // Cache hit - return response
-        if (response) {
+        // Check if valid response
+        if (!response || response.status !== 200 || response.type !== 'basic') {
           return response;
         }
-        return fetch(event.request).then((response) => {
-          // Check if valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          // Clone the response
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-          return response;
+        // Clone the response
+        const responseToCache = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
         });
+        return response;
+      })
+      .catch(() => {
+        // Network failed, try cache
+        return caches.match(event.request);
       })
   );
 });
