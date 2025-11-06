@@ -437,12 +437,12 @@ function updateColorButtons() {
             matchingBtn = document.querySelector('.color-btn[data-color=""]');
         } else if (currentColor === '#000000' || currentColor === 'rgb(0, 0, 0)' || currentColor === 'black') {
             matchingBtn = document.querySelector('.color-btn[data-color="#000000"]');
-        } else if (currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
-            matchingBtn = document.querySelector('.color-btn[data-color="#FF0000"]');
-        } else if (currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow') {
-            matchingBtn = document.querySelector('.color-btn[data-color="#FFFF00"]');
-        } else if (currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green') {
-            matchingBtn = document.querySelector('.color-btn[data-color="#00FF00"]');
+        } else if (currentColor === '#CC0000' || currentColor === 'rgb(204, 0, 0)' || currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#CC0000"]');
+        } else if (currentColor === '#CC9900' || currentColor === 'rgb(204, 153, 0)' || currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#CC9900"]');
+        } else if (currentColor === '#006600' || currentColor === 'rgb(0, 102, 0)' || currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#006600"]');
         }
         
         if (matchingBtn) {
