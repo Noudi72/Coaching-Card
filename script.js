@@ -437,12 +437,14 @@ function updateColorButtons() {
             matchingBtn = document.querySelector('.color-btn[data-color=""]');
         } else if (currentColor === '#000000' || currentColor === 'rgb(0, 0, 0)' || currentColor === 'black') {
             matchingBtn = document.querySelector('.color-btn[data-color="#000000"]');
-        } else if (currentColor === '#CC0000' || currentColor === 'rgb(204, 0, 0)' || currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
-            matchingBtn = document.querySelector('.color-btn[data-color="#CC0000"]');
-        } else if (currentColor === '#CC9900' || currentColor === 'rgb(204, 153, 0)' || currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow') {
-            matchingBtn = document.querySelector('.color-btn[data-color="#CC9900"]');
-        } else if (currentColor === '#006600' || currentColor === 'rgb(0, 102, 0)' || currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green') {
-            matchingBtn = document.querySelector('.color-btn[data-color="#006600"]');
+        } else if (currentColor === '#0066cc' || currentColor === 'rgb(0, 102, 204)' || currentColor === '#0066CC') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#0066cc"]');
+        } else if (currentColor === '#cc0000' || currentColor === 'rgb(204, 0, 0)' || currentColor === '#CC0000' || currentColor === '#FF0000' || currentColor === 'rgb(255, 0, 0)' || currentColor === 'red') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#cc0000"]');
+        } else if (currentColor === '#ffcc00' || currentColor === 'rgb(255, 204, 0)' || currentColor === '#FFCC00' || currentColor === '#FFFF00' || currentColor === 'rgb(255, 255, 0)' || currentColor === 'yellow' || currentColor === '#CC9900' || currentColor === 'rgb(204, 153, 0)') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#ffcc00"]');
+        } else if (currentColor === '#00aa00' || currentColor === 'rgb(0, 170, 0)' || currentColor === '#00AA00' || currentColor === '#00FF00' || currentColor === 'rgb(0, 255, 0)' || currentColor === 'lime' || currentColor === 'green' || currentColor === '#006600' || currentColor === 'rgb(0, 102, 0)') {
+            matchingBtn = document.querySelector('.color-btn[data-color="#00aa00"]');
         }
         
         if (matchingBtn) {
