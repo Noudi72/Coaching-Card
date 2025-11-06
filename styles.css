@@ -368,6 +368,32 @@ body {
     min-width: 0;
 }
 
+/* Farb-Klassen für Player-Selects */
+.player-select.color-black,
+.player-select.color-black option {
+    color: #000000 !important;
+}
+
+.player-select.color-blue,
+.player-select.color-blue option {
+    color: #0066cc !important;
+}
+
+.player-select.color-red,
+.player-select.color-red option {
+    color: #cc0000 !important;
+}
+
+.player-select.color-yellow,
+.player-select.color-yellow option {
+    color: #ffcc00 !important;
+}
+
+.player-select.color-green,
+.player-select.color-green option {
+    color: #00aa00 !important;
+}
+
 /* Global dropdown style & alignment */
 .player-select {
     font-size: 11px !important;
@@ -1069,6 +1095,51 @@ body {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
+    }
+    
+    /* Farb-Klassen beim Drucken erzwingen */
+    .player-select.color-black,
+    .player-select.color-black option {
+        color: #000000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .player-select.color-blue,
+    .player-select.color-blue option {
+        color: #0066cc !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .player-select.color-red,
+    .player-select.color-red option {
+        color: #cc0000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .player-select.color-yellow,
+    .player-select.color-yellow option {
+        color: #ffcc00 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    .player-select.color-green,
+    .player-select.color-green option {
+        color: #00aa00 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    /* Stelle sicher, dass data-text-color Attribute auch beim Drucken verwendet werden */
+    select[data-text-color] {
+        color: attr(data-text-color) !important;
+    }
+    
+    select[data-text-color] option {
+        color: inherit !important;
     }
     
     /* Dropdown-Pfeile für verschiedene Browser ausblenden */

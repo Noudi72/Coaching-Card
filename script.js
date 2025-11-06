@@ -259,9 +259,26 @@ function loadLineupsData(data) {
             if (colorsData[key]) {
                 const color = colorsData[key];
                 select.style.color = color;
+                select.setAttribute('data-text-color', color);
+                
+                // Füge CSS-Klasse hinzu
+                select.classList.remove('color-black', 'color-blue', 'color-red', 'color-yellow', 'color-green');
+                if (color === '#000000') {
+                    select.classList.add('color-black');
+                } else if (color === '#0066cc') {
+                    select.classList.add('color-blue');
+                } else if (color === '#cc0000') {
+                    select.classList.add('color-red');
+                } else if (color === '#ffcc00') {
+                    select.classList.add('color-yellow');
+                } else if (color === '#00aa00') {
+                    select.classList.add('color-green');
+                }
+                
                 // Wende Farbe auch auf alle Optionen an
                 Array.from(select.options).forEach(option => {
                     option.style.color = color;
+                    option.setAttribute('data-text-color', color);
                 });
             }
             
@@ -389,10 +406,26 @@ function populatePlayerSelect(select, position) {
     // Stelle die Farbe wieder her
     if (currentColor) {
         select.style.color = currentColor;
+        select.setAttribute('data-text-color', currentColor);
         // Wende Farbe auch auf alle Optionen an
         Array.from(select.options).forEach(option => {
             option.style.color = currentColor;
+            option.setAttribute('data-text-color', currentColor);
         });
+        
+        // Füge CSS-Klasse hinzu
+        select.classList.remove('color-black', 'color-blue', 'color-red', 'color-yellow', 'color-green');
+        if (currentColor === '#000000') {
+            select.classList.add('color-black');
+        } else if (currentColor === '#0066cc') {
+            select.classList.add('color-blue');
+        } else if (currentColor === '#cc0000') {
+            select.classList.add('color-red');
+        } else if (currentColor === '#ffcc00') {
+            select.classList.add('color-yellow');
+        } else if (currentColor === '#00aa00') {
+            select.classList.add('color-green');
+        }
     }
     
     // Event Listener für Farbänderung beim Auswählen entfernt - Farben werden jetzt direkt am Feld gesetzt
