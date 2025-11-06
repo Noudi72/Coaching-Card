@@ -397,14 +397,19 @@ function initializeSelects() {
 
 // Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
 function setupColorPicker(select) {
+    console.log('🎨 setupColorPicker aufgerufen für Select:', select);
+    
     // Prüfe ob bereits ein Wrapper existiert
     if (select.parentElement && select.parentElement.classList.contains('select-color-wrapper')) {
         // Button sollte bereits existieren, prüfe ob er da ist
         const existingBtn = select.parentElement.querySelector('.color-picker-btn');
         if (existingBtn) {
+            console.log('  ✓ Button bereits vorhanden');
             return; // Bereits eingerichtet
         }
     }
+    
+    console.log('  → Erstelle neuen Button...');
     
     // Erstelle Wrapper um Select + Button
     const wrapper = document.createElement('div');
@@ -430,6 +435,7 @@ function setupColorPicker(select) {
     
     // Füge Button zum Wrapper hinzu
     wrapper.appendChild(colorBtn);
+    console.log('  ✓ Button erstellt und hinzugefügt');
     
     // Event Listener für Button-Klick
     colorBtn.addEventListener('click', (e) => {
@@ -649,7 +655,17 @@ function openStartScreen() {
         currentTeam = editorTeam;
         start.style.display = 'none';
         if (teamSelectEl) teamSelectEl.value = currentTeam;
+        console.log('💾 Roster gespeichert, initialisiere Selects...');
         initializeSelects();
+        setTimeout(() => {
+            const selects = document.querySelectorAll('.player-select');
+            const buttons = document.querySelectorAll('.color-picker-btn');
+            console.log(`🔍 Nach Roster-Speichern: ${selects.length} Selects, ${buttons.length} Buttons`);
+            if (buttons.length < selects.length) {
+                console.log('⚠️ Buttons fehlen, erstelle erneut...');
+                initializeSelects();
+            }
+        }, 100);
         setTimeout(applyTextAlignment, 100);
     });
 
