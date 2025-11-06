@@ -918,10 +918,20 @@ body {
 
 /* Print Styles */
 @media print {
+    /* Stelle sicher, dass alle Farben gedruckt werden */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    
     body {
         background: white;
         padding: 0;
         margin: 0;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
 
     .app-header, .controls {
