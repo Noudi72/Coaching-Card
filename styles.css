@@ -344,11 +344,13 @@ body {
 
 /* Wrapper für Select + Farb-Button */
 .select-color-wrapper {
-    display: flex;
+    display: flex !important;
     align-items: center;
     gap: 2px;
     flex: 1 1 0;
     min-width: 0;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .select-color-wrapper .player-select {
@@ -358,20 +360,24 @@ body {
 
 /* Farb-Button neben Select */
 .color-picker-btn {
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    border: 1px solid #ccc;
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    border: 1px solid #ccc !important;
     border-radius: 2px;
-    background: white;
+    background: white !important;
     cursor: pointer;
     font-size: 12px;
     line-height: 1;
     flex-shrink: 0;
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     vertical-align: middle;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative;
+    z-index: 10;
 }
 
 .color-picker-btn:hover {
