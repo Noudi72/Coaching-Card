@@ -363,6 +363,7 @@ body {
     width: 20px !important;
     height: 20px !important;
     padding: 0 !important;
+    margin-left: 2px !important;
     border: 1px solid #ccc !important;
     border-radius: 2px;
     background: white !important;
@@ -370,14 +371,35 @@ body {
     font-size: 12px;
     line-height: 1;
     flex-shrink: 0;
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
+    display: inline-block !important;
     vertical-align: middle;
     visibility: visible !important;
     opacity: 1 !important;
     position: relative;
     z-index: 10;
+    box-sizing: border-box;
+}
+
+/* Buttons in Flex-Layouts */
+.forwards .color-picker-btn,
+.line-complete .color-picker-btn {
+    display: inline-block !important;
+    vertical-align: middle;
+}
+
+/* Buttons in Grid-Layouts */
+.defense .color-picker-btn,
+.goalies .color-picker-btn {
+    display: inline-block !important;
+    vertical-align: middle;
+    grid-column: auto;
+}
+
+/* Buttons in Tabellen */
+.setup-table td .color-picker-btn {
+    display: inline-block !important;
+    vertical-align: middle;
+    margin-left: 2px;
 }
 
 .color-picker-btn:hover {

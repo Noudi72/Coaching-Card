@@ -388,54 +388,43 @@ function initializeSelects() {
                         select.getAttribute('data-pos') || 
                         select.getAttribute('data-unit');
         populatePlayerSelect(select, position);
-        
-        // Farbauswahl-Button hinzufügen
-        setupColorPicker(select);
     });
-    console.log('✅ Selects initialisiert');
+    
+    // Buttons nach dem Populieren hinzufügen
+    setTimeout(() => {
+        allSelects.forEach(select => {
+            setupColorPicker(select);
+        });
+        const buttons = document.querySelectorAll('.color-picker-btn');
+        console.log('✅ Selects initialisiert,', buttons.length, 'Farb-Buttons erstellt');
+    }, 50);
 }
 
 // Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
 function setupColorPicker(select) {
-    console.log('🎨 setupColorPicker aufgerufen für Select:', select);
-    
-    // Prüfe ob bereits ein Wrapper existiert
-    if (select.parentElement && select.parentElement.classList.contains('select-color-wrapper')) {
-        // Button sollte bereits existieren, prüfe ob er da ist
-        const existingBtn = select.parentElement.querySelector('.color-picker-btn');
-        if (existingBtn) {
-            console.log('  ✓ Button bereits vorhanden');
-            return; // Bereits eingerichtet
-        }
+    // Prüfe ob Button bereits existiert (direkt nach dem Select)
+    const nextSibling = select.nextElementSibling;
+    if (nextSibling && nextSibling.classList.contains('color-picker-btn')) {
+        return; // Bereits eingerichtet
     }
     
-    console.log('  → Erstelle neuen Button...');
-    
-    // Erstelle Wrapper um Select + Button
-    const wrapper = document.createElement('div');
-    wrapper.className = 'select-color-wrapper';
-    wrapper.style.cssText = 'display: flex; align-items: center; gap: 2px; flex: 1 1 0; min-width: 0;';
-    
-    // Verschiebe Select in Wrapper
-    select.parentNode.insertBefore(wrapper, select);
-    wrapper.appendChild(select);
-    
-    // Erstelle Farb-Button
+    // Erstelle Farb-Button direkt nach dem Select
     const colorBtn = document.createElement('button');
     colorBtn.type = 'button';
     colorBtn.className = 'color-picker-btn';
     colorBtn.innerHTML = '🎨';
     colorBtn.title = 'Farbe ändern';
+    colorBtn.setAttribute('data-select-id', select.getAttribute('data-position') || 
+                                         select.getAttribute('data-pos') || 
+                                         select.getAttribute('data-line') || 
+                                         select.getAttribute('data-unit') || 
+                                         'unknown');
     
     // Setze aktuelle Farbe als Hintergrund
-    if (select.style.color) {
-        colorBtn.style.backgroundColor = select.style.color;
-        colorBtn.style.color = select.style.color;
-    }
+    updateButtonColor(colorBtn, select);
     
-    // Füge Button zum Wrapper hinzu
-    wrapper.appendChild(colorBtn);
-    console.log('  ✓ Button erstellt und hinzugefügt');
+    // Füge Button direkt nach dem Select ein
+    select.parentNode.insertBefore(colorBtn, select.nextSibling);
     
     // Event Listener für Button-Klick
     colorBtn.addEventListener('click', (e) => {
@@ -446,19 +435,23 @@ function setupColorPicker(select) {
     
     // Update Button-Farbe wenn Select-Farbe geändert wird
     const observer = new MutationObserver(() => {
-        if (select.style.color) {
-            colorBtn.style.backgroundColor = select.style.color;
-            colorBtn.style.color = select.style.color;
-        } else {
-            colorBtn.style.backgroundColor = 'white';
-            colorBtn.style.color = '#000';
-        }
+        updateButtonColor(colorBtn, select);
     });
     
     observer.observe(select, { 
         attributes: true, 
         attributeFilter: ['style'] 
     });
+}
+
+function updateButtonColor(btn, select) {
+    if (select.style.color && select.style.color !== '') {
+        btn.style.backgroundColor = select.style.color;
+        btn.style.color = select.style.color;
+    } else {
+        btn.style.backgroundColor = 'white';
+        btn.style.color = '#000';
+    }
 }
 
 function openColorPicker(select, colorBtn) {
