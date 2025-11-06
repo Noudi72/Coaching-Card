@@ -1013,14 +1013,22 @@ body {
     select {
         border: 1px solid #000 !important;
         background: white !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
         /* Dropdown-Pfeile beim Drucken ausblenden */
         -webkit-appearance: none !important;
         -moz-appearance: none !important;
         appearance: none !important;
-        /* Farben beim Drucken beibehalten */
-        color: inherit !important;
+        /* Farben beim Drucken beibehalten - NICHT überschreiben */
+    }
+    
+    /* Player-Selects: Farben explizit beibehalten */
+    .player-select {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        /* Stelle sicher, dass inline styles nicht überschrieben werden */
     }
     
     /* Farb-Dropdowns beim Drucken ausblenden */
