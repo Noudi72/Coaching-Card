@@ -1055,7 +1055,20 @@ body {
     select option {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+        color-adjust: exact !important;
         color: inherit !important;
+    }
+    
+    /* Stelle sicher, dass Select-Farben auch auf Optionen angewendet werden */
+    select[style*="color"] option {
+        color: inherit !important;
+    }
+    
+    /* Explizite Farben für Optionen beim Drucken */
+    .player-select option {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
     }
     
     /* Dropdown-Pfeile für verschiedene Browser ausblenden */

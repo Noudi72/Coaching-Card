@@ -257,7 +257,12 @@ function loadLineupsData(data) {
             
             // Lade Farbe für dieses Feld
             if (colorsData[key]) {
-                select.style.color = colorsData[key];
+                const color = colorsData[key];
+                select.style.color = color;
+                // Wende Farbe auch auf alle Optionen an
+                Array.from(select.options).forEach(option => {
+                    option.style.color = color;
+                });
             }
             
             if (savedValue) {
@@ -347,8 +352,9 @@ let currentTeam = 'u21';
 
 // Initialize player selects
 function populatePlayerSelect(select, position) {
-    // Speichere aktuellen Wert, falls vorhanden
+    // Speichere aktuellen Wert und Farbe, falls vorhanden
     const currentValue = select.value;
+    const currentColor = select.style.color || '';
     
     const allPlayers = [];
     if (position === 'goalie1' || position === 'goalie2') {
@@ -368,12 +374,25 @@ function populatePlayerSelect(select, position) {
         const playerValue = `${player.number} ${player.name}`;
         option.value = playerValue;
         option.textContent = playerValue;
+        // Wende gespeicherte Farbe auf Optionen an
+        if (currentColor) {
+            option.style.color = currentColor;
+        }
         select.appendChild(option);
     });
     
     // Stelle den vorherigen Wert wieder her, falls er noch existiert
     if (currentValue && Array.from(select.options).some(opt => opt.value === currentValue)) {
         select.value = currentValue;
+    }
+    
+    // Stelle die Farbe wieder her
+    if (currentColor) {
+        select.style.color = currentColor;
+        // Wende Farbe auch auf alle Optionen an
+        Array.from(select.options).forEach(option => {
+            option.style.color = currentColor;
+        });
     }
     
     // Event Listener für Farbänderung beim Auswählen entfernt - Farben werden jetzt direkt am Feld gesetzt
@@ -457,8 +476,16 @@ function applyColorToSelectedField(color) {
     if (selectedField) {
         if (color && color !== '') {
             selectedField.style.color = color;
+            // Wende Farbe auch auf alle Optionen an
+            Array.from(selectedField.options).forEach(option => {
+                option.style.color = color;
+            });
         } else {
             selectedField.style.color = '';
+            // Entferne Farbe von allen Optionen
+            Array.from(selectedField.options).forEach(option => {
+                option.style.color = '';
+            });
         }
         saveLineups();
         updateColorButtons();
