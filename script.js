@@ -507,17 +507,39 @@ function updateColorButtons() {
 
 function applyColorToSelectedField(color) {
     if (selectedField) {
+        // Entferne alle Farb-Klassen
+        selectedField.classList.remove('color-black', 'color-blue', 'color-red', 'color-yellow', 'color-green');
+        
         if (color && color !== '') {
+            // Setze Farbe als inline style UND als CSS-Klasse
             selectedField.style.color = color;
+            selectedField.setAttribute('data-text-color', color);
+            
             // Wende Farbe auch auf alle Optionen an
             Array.from(selectedField.options).forEach(option => {
                 option.style.color = color;
+                option.setAttribute('data-text-color', color);
             });
+            
+            // Füge CSS-Klasse hinzu für zusätzliche Sicherheit
+            if (color === '#000000') {
+                selectedField.classList.add('color-black');
+            } else if (color === '#0066cc') {
+                selectedField.classList.add('color-blue');
+            } else if (color === '#cc0000') {
+                selectedField.classList.add('color-red');
+            } else if (color === '#ffcc00') {
+                selectedField.classList.add('color-yellow');
+            } else if (color === '#00aa00') {
+                selectedField.classList.add('color-green');
+            }
         } else {
             selectedField.style.color = '';
+            selectedField.removeAttribute('data-text-color');
             // Entferne Farbe von allen Optionen
             Array.from(selectedField.options).forEach(option => {
                 option.style.color = '';
+                option.removeAttribute('data-text-color');
             });
         }
         saveLineups();

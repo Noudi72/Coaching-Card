@@ -948,7 +948,6 @@ body {
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-adjust: exact !important;
     }
     
     body {
@@ -957,7 +956,6 @@ body {
         margin: 0;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-adjust: exact !important;
     }
 
     .app-header, .controls {
@@ -1051,7 +1049,6 @@ body {
         background: white !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-adjust: exact !important;
         /* Dropdown-Pfeile beim Drucken ausblenden */
         -webkit-appearance: none !important;
         -moz-appearance: none !important;
@@ -1063,7 +1060,6 @@ body {
     .player-select {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-adjust: exact !important;
         /* Stelle sicher, dass inline styles nicht überschrieben werden */
     }
     
@@ -1081,7 +1077,6 @@ body {
     select option {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-adjust: exact !important;
         color: inherit !important;
     }
     
@@ -1094,7 +1089,6 @@ body {
     .player-select option {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        color-adjust: exact !important;
     }
     
     /* Farb-Klassen beim Drucken erzwingen */
