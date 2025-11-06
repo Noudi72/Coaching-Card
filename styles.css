@@ -1028,6 +1028,11 @@ body {
         display: none !important;
     }
     
+    /* Farbauswahl im Header beim Drucken ausblenden */
+    .color-picker-controls {
+        display: none !important;
+    }
+    
     /* Farben in Optionen beim Drucken beibehalten */
     select option {
         -webkit-print-color-adjust: exact !important;
