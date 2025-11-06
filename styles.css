@@ -1,0 +1,1022 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+    padding: 20px;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+/* Start Screen */
+.start-screen {
+    position: fixed;
+    inset: 0;
+    background: #f4f6f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    overflow: auto;
+    padding: 16px;
+}
+.start-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); width: min(720px, 92vw); 
+    max-height: 92vh; overflow: auto;
+}
+.start-logo { width: 96px; height: 96px; display: block; margin: 0 auto 8px auto; }
+.start-title { text-align: center; margin: 4px 0 16px 0; }
+.start-actions { display: flex; gap: 12px; justify-content: center; margin-bottom: 12px; position: sticky; top: 0; background: white; padding-bottom: 8px; z-index: 2; border-bottom: 1px solid #eee; }
+.start-btn { padding: 10px 16px; border: none; border-radius: 6px; background: #1976d2; color: white; cursor: pointer; font-weight: 600; }
+.start-btn.secondary { background: #666; }
+.start-btn.primary { background: #2e7d32; }
+.roster-editor { margin-top: 8px; }
+.roster-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.roster-table th, .roster-table td { border-bottom: 1px solid #ddd; padding: 6px; text-align: left; }
+.roster-table input, .roster-table select { width: 100%; padding: 6px; box-sizing: border-box; }
+.roster-table td:last-child { width: 44px; }
+.roster-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+
+/* Header */
+.app-header { position: sticky; top: 0; background: #ffffff; border-bottom: 1px solid #e5e5e5; padding: 8px 12px; z-index: 10; }
+.controls { position: static; background: transparent; box-shadow: none; padding: 0; z-index: 1; display: flex; align-items: center; gap: 8px; }
+.controls label { margin-right: 8px; }
+
+.controls select, .controls button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.controls button {
+    background: #0066cc;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.controls button:hover {
+    background: #0052a3;
+}
+
+.controls button { margin-left: 8px; }
+#open-start { background: #666; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; }
+#print-btn { background: #1976d2; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; }
+
+/* Page Setup für A4 Querformat */
+.page {
+    width: 297mm;
+    height: 210mm;
+    background: white;
+    margin: 0 auto 20px;
+    padding: 3mm;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow: visible;
+}
+
+.spacer {
+    flex: 0 0 1%;
+    min-width: 0;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: visible;
+    flex: 0 0 32%;
+    min-width: 0;
+    border: none;
+}
+
+/* Section Styling */
+.section {
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+    flex: 0 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    gap: 0;
+}
+
+.period-notes.section {
+    flex: 1 1 auto;
+    height: 100%;
+}
+
+.setup-1,
+.setup-2 {
+    padding: 2px 4px;
+    gap: 0 !important;
+}
+
+.setup-1 > *,
+.setup-2 > * {
+    margin: 0 !important;
+}
+
+.setup-1 h2,
+.setup-2 h2 {
+    margin-bottom: 0 !important;
+    padding-bottom: 1px !important;
+    margin-top: 0 !important;
+}
+
+.section h2 {
+    padding: 4px 6px;
+    margin: -4px -4px 4px -4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 4px 4px 0 0;
+    flex-shrink: 0;
+}
+
+.game-day h2 {
+    background: #0066cc;
+    color: white;
+}
+
+.overtime h2, .shootout h2, .setup-1 h2, .setup-2 h2 {
+    background: #ffcc00;
+    color: black;
+}
+
+.lineup h2 {
+    background: #0066cc;
+    color: white;
+}
+
+.powerplay h2 {
+    background: #00aa00;
+    color: white;
+}
+
+.penalty-kill h2 {
+    background: #cc0000;
+    color: white;
+}
+
+.tactical-board h2 {
+    background: #87ceeb;
+    color: white;
+}
+
+.tactical-board {
+    flex: 1 1 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.tactical-board h2 {
+    flex-shrink: 0;
+}
+
+.period-notes h2 {
+    background: #ffcc00;
+    color: black;
+}
+
+/* Fields */
+.field {
+    margin-bottom: 6px;
+    font-size: 11px;
+}
+
+.penalty-line {
+    flex: 1;
+    min-width: 0;
+}
+
+.field label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.field input {
+    width: 100%;
+    padding: 4px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    margin-bottom: 3px;
+    min-height: 22px;
+}
+
+.referee-input {
+    margin-bottom: 3px;
+}
+
+/* Tables */
+.overtime-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+
+.overtime-table td {
+    border: 1px solid #ccc;
+    padding: 4px;
+    height: 20px;
+    text-align: center;
+}
+
+.setup-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    font-size: 11px; /* match lineup */
+    flex-shrink: 0;
+}
+
+.setup-table td {
+    padding: 2px;
+}
+
+.setup-table select {
+    width: 100%;
+    padding: 4px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    min-height: 22px;
+}
+
+/* Lineup */
+.lineup-lines {
+    font-size: 10px;
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lineup.section {
+    flex: 0 0 auto;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* One line: forwards row on top, defense row below */
+.line-complete {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Forwards row */
+.line-complete .forwards {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Defense row with centered number overlay */
+.line-complete .defense {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* same column widths as forwards */
+    column-gap: 4px;
+    align-items: center;
+}
+
+.line-complete .defense .line-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+/* ensure grid children fill columns */
+.line-complete .defense select { width: 100%; }
+
+/* Ensure selects fill their slots */
+.line-complete select,
+.goalies select {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+/* Global dropdown style & alignment */
+.player-select {
+    font-size: 11px !important;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: white;
+    text-align: left;
+    height: 22px;
+    min-height: 22px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.player-select[data-pos="c"] { text-align: center; text-align-last: center; }
+.player-select[data-pos="rw"],
+.player-select[data-pos="rd"],
+.player-select[data-position="goalie2"] {
+    text-align: right;
+    text-align-last: right;
+    direction: rtl;
+}
+.player-select[data-pos="rw"] option,
+.player-select[data-pos="rd"] option,
+.player-select[data-position="goalie2"] option { direction: ltr; text-align: right; }
+.player-select[data-pos="lw"],
+.player-select[data-pos="ld"],
+.player-select[data-position="goalie1"] { text-align: left; text-align-last: left; }
+
+/* Goalies with centered G overlay */
+.goalies {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 4px;
+    align-items: center;
+    margin-top: 4px;
+}
+.goalies .line-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+.goalies select { width: 100%; }
+
+.line-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.line-complete select {
+    width: 100%;
+}
+
+.forwards {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forwards select {
+    flex: 1;
+    padding: 4px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    min-height: 22px;
+}
+
+.forwards select:first-child {
+    padding-left: 3px;
+    padding-right: 8px;
+    text-align: left;
+}
+
+.forwards select:nth-child(2) {
+    padding-left: 8px;
+    padding-right: 8px;
+    text-align: center;
+}
+
+.forwards select:last-child {
+    padding-left: 8px;
+    padding-right: 3px;
+    text-align: right;
+}
+
+.forwards select:last-child[data-pos="rw"] {
+    direction: rtl;
+}
+
+.forwards select:last-child[data-pos="rw"] option {
+    direction: ltr;
+    text-align: right;
+}
+
+.defense {
+    display: flex;
+    gap: 4px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.defense select {
+    flex: 1;
+    padding: 4px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    min-height: 22px;
+}
+
+.defense select:first-child {
+    padding-left: 3px;
+    padding-right: 8px;
+    text-align: left;
+}
+
+.defense select:last-child {
+    padding-left: 8px;
+    padding-right: 3px;
+    text-align: right;
+}
+
+.defense select:last-child[data-pos="rd"] {
+    direction: rtl;
+}
+
+.defense select:last-child[data-pos="rd"] option {
+    direction: ltr;
+    text-align: right;
+}
+
+.line-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.line-group strong {
+    width: 20px;
+}
+
+.line-group select {
+    flex: 1;
+    min-width: 80px;
+    padding: 4px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    min-height: 22px;
+}
+
+.goalies {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 4px;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.goalies .line-number {
+    grid-column: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.goalies select:first-of-type {
+    grid-column: 1;
+}
+
+.goalies select:last-of-type {
+    grid-column: 3;
+}
+
+.goalies select {
+    width: 100%;
+}
+
+/* Powerplay & Penalty Kill */
+.pp-units, .pk-units {
+    font-size: 10px;
+    flex: 0 0 auto;
+    min-height: 0;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 6px; /* slightly tighter to fit page */
+}
+
+.unit {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 3px;
+    flex-wrap: wrap;
+}
+
+.unit strong {
+    width: 20px;
+}
+
+.unit select {
+    flex: 1;
+    min-width: 70px;
+    padding: 4px;
+    font-size: 11px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    min-height: 22px;
+}
+
+/* Rink Drawings */
+.rink-container {
+    margin: 1px 0;
+    text-align: center;
+    width: 100%;
+    overflow: visible;
+}
+
+.setup-1 .rink-container,
+.setup-2 .rink-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+    height: auto;
+    display: block;
+}
+
+.setup-1 .rink-container + .rink-container,
+.setup-2 .rink-container + .rink-container {
+    margin-top: -10px !important;
+}
+
+.setup-1 .rink-container + .setup-table + .rink-container,
+.setup-2 .rink-container + .setup-table + .rink-container {
+    margin-top: -10px !important;
+}
+
+.setup-1 .setup-table,
+.setup-2 .setup-table {
+    position: relative;
+    z-index: 1;
+    margin-top: -8px !important;
+    margin-bottom: -8px !important;
+}
+
+.setup-1 .rink-image.rotated,
+.setup-2 .rink-image.rotated {
+    margin: 0 auto;
+}
+
+.setup-table {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+.setup-1 .setup-table td,
+.setup-2 .setup-table td {
+    padding: 0 !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    vertical-align: top;
+}
+
+.setup-1 .setup-table select,
+.setup-2 .setup-table select {
+    margin: 0 !important;
+    padding: 1px !important;
+    line-height: 1 !important;
+    font-size: 9px !important;
+    height: auto !important;
+    min-height: 16px !important;
+}
+
+.setup-1 .setup-table tr,
+.setup-2 .setup-table tr {
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    height: auto !important;
+}
+
+.setup-1 .setup-table,
+.setup-2 .setup-table {
+    margin: -8px 0 !important;
+    padding: 0 !important;
+    border-spacing: 0 !important;
+    border-collapse: collapse !important;
+    line-height: 1 !important;
+    position: relative;
+    z-index: 1;
+}
+
+.rink-image {
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+    object-fit: contain;
+}
+
+.rink-image.rotated {
+    transform: rotate(90deg);
+    width: 100%;
+    height: auto;
+    max-height: 260px;
+    margin: 0 auto;
+    display: block;
+    transform-origin: center center;
+    vertical-align: top;
+    line-height: 0;
+}
+
+.setup-1 img.rink-image.rotated,
+.setup-2 img.rink-image.rotated {
+    display: block;
+    margin: 0 auto;
+    vertical-align: top;
+}
+
+.full-rink-container {
+    flex: 1 1 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+
+.full-rink-image {
+    width: 100%;
+    height: auto;
+    max-height: 170mm;
+    object-fit: contain;
+}
+
+/* Logo */
+.top-right {
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.logo-container {
+    text-align: center;
+    margin: 4px 0;
+    flex-shrink: 0;
+}
+
+.team-logo {
+    max-width: 60px;
+    height: auto;
+}
+
+/* Period Notes */
+.notes-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.period {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.period strong {
+    margin-bottom: 2px;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.notes-textarea {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 3px;
+    font-size: 9px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    resize: none;
+    font-family: Arial, sans-serif;
+    min-height: 0;
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 19px,
+        #ddd 19px,
+        #ddd 20px
+    );
+    background-attachment: local;
+    line-height: 20px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.notes-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+    flex: 1 1 auto;
+}
+
+.period-notes {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+
+.period-notes h2 {
+    flex-shrink: 0;
+}
+
+.notes-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Player Select Dropdowns */
+.player-select {
+    font-size: 11px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    background: white;
+    text-align: left;
+    min-height: 22px;
+    width: auto;
+}
+
+.player-select[data-pos="c"] {
+    text-align: center;
+    text-align-last: center;
+}
+
+.player-select[data-pos="rw"],
+.player-select[data-pos="rd"],
+.player-select[data-position="goalie2"] {
+    text-align: right;
+    text-align-last: right;
+    direction: rtl;
+}
+
+.player-select[data-pos="rw"] option,
+.player-select[data-pos="rd"] option,
+.player-select[data-position="goalie2"] option {
+    direction: ltr;
+    text-align: right;
+}
+
+.player-select[data-pos="lw"],
+.player-select[data-pos="ld"],
+.player-select[data-position="goalie1"] {
+    text-align: left;
+    text-align-last: left;
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    .app-header, .controls {
+        display: none;
+    }
+
+    .page {
+        width: 293mm; /* 297 - (2*1mm LR) - (2*1mm Padding) */
+        height: 198mm; /* 210 - (2*4mm TB) - (2*1mm Padding) - Sicherheits-Puffer */
+        margin: 0;
+        padding: 1mm;
+        box-shadow: none;
+        page-break-after: auto !important;
+        page-break-before: auto !important;
+        page-break-inside: avoid;
+        overflow: hidden;
+    }
+
+    .page.page-2 { page-break-before: always !important; page-break-after: auto !important; }
+
+    @page { size: A4 landscape; margin: 4mm 1mm; }
+
+    /* Period Notes: Nur Linien, keine Felder beim Drucken */
+    .period {
+        position: relative;
+    }
+    
+    /* Linien mit ::after Element für zuverlässigen PDF-Export */
+    .period::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 14px; /* unterhalb vom Label */
+        bottom: 0;
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 19px,
+            #000000 19px,
+            #000000 20px
+        );
+        background-size: 100% 20px;
+        pointer-events: none;
+        z-index: 2;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Textarea ohne Rahmen, transparent, damit Linien sichtbar sind */
+    .notes-textarea {
+        border: none !important;
+        background: transparent !important;
+        position: relative;
+        z-index: 1;
+        padding: 3px !important;
+        line-height: 20px !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .container {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Alle Inputs standardmäßig mit Rahmen */
+    input {
+        border: 1px solid #000 !important;
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Game Day und Shootout: Inputs ohne Rahmen, nur mit Unterlinie (überschreibt oben) */
+    .game-day .field input,
+    .game-day .referee-input,
+    .shootout .field input,
+    .shootout .penalty-line {
+        border: none !important;
+        border-bottom: 1px solid #000 !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Selects behalten Rahmen */
+    select {
+        border: 1px solid #000 !important;
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        /* Dropdown-Pfeile beim Drucken ausblenden */
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+    }
+    
+    /* Dropdown-Pfeile für verschiedene Browser ausblenden */
+    select::-ms-expand {
+        display: none !important;
+    }
+    
+    select::after {
+        display: none !important;
+    }
+    
+    /* Textareas außer Period Notes behalten Rahmen */
+    textarea:not(.notes-textarea) {
+        border: 1px solid #000 !important;
+        background: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .section h2 {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    /* kompaktere Überschriften und Felder für Seite 1 Höhe */
+    .section h2 { padding: 3px 4px; margin: -4px -4px 3px -4px; font-size: 11px; }
+    .field { margin-bottom: 4px; }
+    .field input { padding: 3px; min-height: 18px; font-size: 10px; }
+
+    .rink-image.rotated {
+        width: 100%;
+        max-height: 240px;
+    }
+    .full-rink-image { max-height: 160mm; }
+    .pp-units, .pk-units { gap: 4px; }
+    .lineup-lines { gap: 6px; }
+    
+    select, input {
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow: visible;
+    }
+    
+    .column {
+        overflow: visible;
+    }
+    
+    .section {
+        overflow: visible;
+    }
+}
+
+/* Spacing between categories on the right column */
+.powerplay.section { margin-top: 6px; }
+.penalty-kill.section { margin-top: 6px; }
+
+/* 6:5 Setup tables: match lineup sizing and alignment */
+.setup-table select {
+    width: 100%;
+    padding: 4px;
+    font-size: 11px !important; /* match lineup and override browser defaults */
+    line-height: 1.2;
+    height: 22px;
+    min-height: 22px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+}
+/* Alignment per column: left, center, right (like LW, C, RW) */
+.setup-table td:nth-child(1) select { text-align: left; text-align-last: left; direction: ltr; }
+.setup-table td:nth-child(2) select { text-align: center; text-align-last: center; direction: ltr; }
+.setup-table td:nth-child(3) select { text-align: right; text-align-last: right; direction: rtl; }
+.setup-table td:nth-child(3) select option { direction: ltr; text-align: right; }
+
+/* Lineup spacing reference: gap: 8px between lines; 4px within line */
+.lineup-lines { gap: 8px; }
+.line-complete { gap: 4px; }
+
+/* Apply same spacing to 6:5 Setup tables */
+.setup-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    font-size: 11px; /* match lineup */
+    flex-shrink: 0;
+}
+.setup-table td { padding: 2px; }
+
+/* Simulate the same vertical rhythm: 8px between logical rows in setup */
+.setup-1, .setup-2 { display: flex; flex-direction: column; gap: 8px; }
+/* Ensure table + following table keeps the 8px feel */
+.setup-1 .setup-table + .setup-table,
+.setup-2 .setup-table + .setup-table { margin-top: 8px; }
+
+/* Force identical Lineup font-sizing for all 6:5 Setup selects */
+.setup-1 select.player-select,
+.setup-2 select.player-select {
+    font-size: 11px !important;
+    line-height: 1.2 !important;
+    height: 22px !important;
+    padding: 4px !important;
+    box-sizing: border-box !important;
+    font-family: inherit !important;
+}
+.setup-1 select.player-select option,
+.setup-2 select.player-select option {
+    font-size: 11px !important;
+    font-family: inherit !important;
+}
+/* Catch any setup selects without the class just in case */
+.setup-1 select,
+.setup-2 select {
+    font-size: 11px !important;
+    height: 22px !important;
+    padding: 4px !important;
+    box-sizing: border-box !important;
+}
+
+.left-logo { text-align: center; margin: 4px 0 8px 0; height: auto; padding: 0; }
+.left-logo .team-logo { max-width: 90px; height: auto; display: inline-block; }
+
+/* existing right-column adjustments */
+.right-column .logo-container { margin: 0; height: 0; padding: 0; }
+.right-column .team-logo { display: none; }
+.right-column .section:first-of-type { margin-top: 0; }
+
