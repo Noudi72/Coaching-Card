@@ -704,15 +704,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('🔄 Starte Laden der Lineups...');
             loadLineups(); // Lade gespeicherte Lineups
             applyTextAlignment();
-            // Stelle sicher, dass alle Farb-Dropdowns erstellt wurden
+            // Stelle sicher, dass Selects initialisiert wurden
             setTimeout(() => {
-                const selects = document.querySelectorAll('.player-select');
-                const colorSelects = document.querySelectorAll('.color-select');
-                console.log(`🔍 Prüfung: ${selects.length} Selects, ${colorSelects.length} Farb-Dropdowns`);
-                if (colorSelects.length < selects.length) {
-                    console.log('⚠️ Nicht alle Farb-Dropdowns wurden erstellt, versuche erneut...');
-                    initializeSelects();
-                }
+                initializeSelects();
             }, 200);
         }, 200);
     }, 100);
