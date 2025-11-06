@@ -93,8 +93,9 @@ function saveRosters() {
 }
 
 // Load/save lineups in localStorage
-const LINEUP_STORAGE_VERSION = 'v2'; // Erhöhe Version bei Key-Änderungen
+const LINEUP_STORAGE_VERSION = 'v3'; // Erhöhe Version bei Key-Änderungen
 const LINEUP_STORAGE_KEY = `coaching-card-lineups-${LINEUP_STORAGE_VERSION}`;
+const COLORS_STORAGE_KEY = `coaching-card-colors-${LINEUP_STORAGE_VERSION}`;
 
 function saveLineups() {
     try {
@@ -139,6 +140,27 @@ function saveLineups() {
             shootoutData[`shootout_${index}`] = input.value || '';
         });
         
+        // Speichere auch Farben der Dropdowns
+        const colorsData = {};
+        selects.forEach(select => {
+            const line = select.getAttribute('data-line') || '';
+            const unit = select.getAttribute('data-unit') || '';
+            const position = select.getAttribute('data-position') || '';
+            const pos = select.getAttribute('data-pos') || '';
+            
+            const parts = [];
+            if (line) parts.push(`line_${line}`);
+            if (unit) parts.push(`unit_${unit}`);
+            if (position) parts.push(`position_${position}`);
+            if (pos) parts.push(`pos_${pos}`);
+            
+            const key = parts.join('_') || 'unknown';
+            const color = select.style.color || '';
+            if (color) {
+                colorsData[key] = color;
+            }
+        });
+        
         const dataToSave = {
             lineups: lineupData,
             gameDay: gameDayData,
@@ -148,6 +170,7 @@ function saveLineups() {
         };
         
         localStorage.setItem(LINEUP_STORAGE_KEY, JSON.stringify(dataToSave));
+        localStorage.setItem(COLORS_STORAGE_KEY, JSON.stringify(colorsData));
         console.log('✓ Lineups gespeichert:', Object.keys(lineupData).length, 'Werte');
         console.log('  Gespeicherte Keys (erste 10):', Object.keys(lineupData).slice(0, 10));
     } catch (e) {
@@ -158,7 +181,7 @@ function saveLineups() {
 function loadLineups() {
     try {
         // Lösche alte Versionen
-        ['coaching-card-lineups-v1'].forEach(oldKey => {
+        ['coaching-card-lineups-v1', 'coaching-card-lineups-v2'].forEach(oldKey => {
             if (localStorage.getItem(oldKey)) {
                 console.log(`🗑️ Lösche alte Daten: ${oldKey}`);
                 localStorage.removeItem(oldKey);
@@ -194,6 +217,17 @@ function loadLineups() {
 }
 
 function loadLineupsData(data) {
+    // Lade Farben
+    let colorsData = {};
+    try {
+        const colorsRaw = localStorage.getItem(COLORS_STORAGE_KEY);
+        if (colorsRaw) {
+            colorsData = JSON.parse(colorsRaw);
+        }
+    } catch (e) {
+        console.error('Fehler beim Laden der Farben:', e);
+    }
+    
     // Lade Lineup-Werte
     if (data.lineups) {
         const selects = document.querySelectorAll('.player-select');
@@ -221,16 +255,16 @@ function loadLineupsData(data) {
             const key = parts.join('_') || 'unknown';
             const savedValue = data.lineups[key];
             
+            // Lade Farbe für dieses Feld
+            if (colorsData[key]) {
+                select.style.color = colorsData[key];
+            }
+            
             if (savedValue) {
                 // Prüfe ob Option existiert
                 const optionExists = Array.from(select.options).some(opt => opt.value === savedValue);
                 if (optionExists) {
                     select.value = savedValue;
-                    // Setze Farbe basierend auf der ausgewählten Option
-                    const selectedOption = select.options[select.selectedIndex];
-                    if (selectedOption && selectedOption.style.color) {
-                        select.style.color = selectedOption.style.color;
-                    }
                     loadedCount++;
                     console.log(`✓ Geladen: ${key} = ${savedValue}`);
                 } else {
@@ -239,11 +273,6 @@ function loadLineupsData(data) {
                         select.value = savedValue;
                         // Prüfe ob es wirklich gesetzt wurde
                         if (select.value === savedValue) {
-                            // Setze Farbe basierend auf der ausgewählten Option
-                            const selectedOption = select.options[select.selectedIndex];
-                            if (selectedOption && selectedOption.style.color) {
-                                select.style.color = selectedOption.style.color;
-                            }
                             loadedCount++;
                             console.log(`✓ Geladen (direkt): ${key} = ${savedValue}`);
                         } else {
@@ -333,38 +362,21 @@ function populatePlayerSelect(select, position) {
     // Add empty option
     select.innerHTML = '<option value="">-</option>';
 
-    // Add players with colors
+    // Add players (ohne Farben aus dem Roster)
     allPlayers.forEach(player => {
         const option = document.createElement('option');
         const playerValue = `${player.number} ${player.name}`;
         option.value = playerValue;
         option.textContent = playerValue;
-        // Setze Farbe für die Option
-        if (player.color && player.color !== '#000000') {
-            option.style.color = player.color;
-        }
         select.appendChild(option);
     });
     
     // Stelle den vorherigen Wert wieder her, falls er noch existiert
     if (currentValue && Array.from(select.options).some(opt => opt.value === currentValue)) {
         select.value = currentValue;
-        // Setze auch die Farbe des Selects basierend auf der ausgewählten Option
-        const selectedOption = select.options[select.selectedIndex];
-        if (selectedOption && selectedOption.style.color) {
-            select.style.color = selectedOption.style.color;
-        }
     }
     
-    // Event Listener für Farbänderung beim Auswählen
-    select.addEventListener('change', () => {
-        const selectedOption = select.options[select.selectedIndex];
-        if (selectedOption && selectedOption.style.color) {
-            select.style.color = selectedOption.style.color;
-        } else {
-            select.style.color = '';
-        }
-    });
+    // Event Listener für Farbänderung beim Auswählen entfernt - Farben werden jetzt direkt am Feld gesetzt
 }
 
 // Initialize all selects
@@ -375,7 +387,61 @@ function initializeSelects() {
                         select.getAttribute('data-pos') || 
                         select.getAttribute('data-unit');
         populatePlayerSelect(select, position);
+        
+        // Farbauswahl per Doppelklick hinzufügen
+        setupColorPicker(select);
     });
+}
+
+// Farbauswahl für Dropdown-Felder (ähnlich wie Excel)
+function setupColorPicker(select) {
+    // Doppelklick öffnet Farbpicker
+    select.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openColorPicker(select);
+    });
+    
+    // Rechtsklick öffnet auch Farbpicker (optional)
+    select.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        openColorPicker(select);
+    });
+}
+
+function openColorPicker(select) {
+    // Erstelle temporären Farbpicker
+    const colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.value = select.style.color || '#000000';
+    colorInput.style.position = 'fixed';
+    colorInput.style.opacity = '0';
+    colorInput.style.pointerEvents = 'none';
+    colorInput.style.width = '1px';
+    colorInput.style.height = '1px';
+    
+    document.body.appendChild(colorInput);
+    
+    colorInput.addEventListener('change', () => {
+        const color = colorInput.value;
+        if (color === '#000000') {
+            // Schwarz = Standard, entferne Farbe
+            select.style.color = '';
+        } else {
+            select.style.color = color;
+        }
+        saveLineups(); // Speichere automatisch
+        document.body.removeChild(colorInput);
+    });
+    
+    colorInput.addEventListener('blur', () => {
+        if (document.body.contains(colorInput)) {
+            document.body.removeChild(colorInput);
+        }
+    });
+    
+    // Öffne Farbpicker
+    colorInput.click();
 }
 
 // Handle team change
@@ -453,26 +519,24 @@ function applyTextAlignment() {
 }
 
 // Start screen logic
-function buildRosterRow(player = { number: '', name: '', pos: 'F', color: '#000000' }) {
+function buildRosterRow(player = { number: '', name: '', pos: 'F' }) {
     const tr = document.createElement('tr');
     const tdNum = document.createElement('td');
     const tdName = document.createElement('td');
     const tdPos = document.createElement('td');
-    const tdColor = document.createElement('td');
     const tdDel = document.createElement('td');
 
     tdNum.innerHTML = `<input type="number" min="0" value="${player.number ?? ''}">`;
     tdName.innerHTML = `<input type="text" value="${player.name ?? ''}">`;
     tdPos.innerHTML = `<select><option value="F">F</option><option value="D">D</option><option value="G">G</option></select>`;
     tdPos.querySelector('select').value = player.pos || (player.isGoalie ? 'G' : 'F');
-    tdColor.innerHTML = `<input type="color" value="${player.color || '#000000'}">`;
     const delBtn = document.createElement('button');
     delBtn.textContent = '✕';
     delBtn.className = 'start-btn secondary';
     delBtn.onclick = () => tr.remove();
     tdDel.appendChild(delBtn);
 
-    tr.append(tdNum, tdName, tdPos, tdColor, tdDel);
+    tr.append(tdNum, tdName, tdPos, tdDel);
     return tr;
 }
 
@@ -487,9 +551,9 @@ function openStartScreen() {
         rosterTableBody.innerHTML = '';
         const team = rosters[teamKey];
         const rows = [];
-        team.offense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'F', color: p.color || '#000000' }));
-        team.defense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'D', color: p.color || '#000000' }));
-        team.goalies.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'G', color: p.color || '#000000' }));
+        team.offense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'F' }));
+        team.defense.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'D' }));
+        team.goalies.forEach(p => rows.push({ number: p.number, name: p.name, pos: 'G' }));
         rows.forEach(p => rosterTableBody.appendChild(buildRosterRow(p)));
     }
 
@@ -508,15 +572,14 @@ function openStartScreen() {
     document.getElementById('save-roster').addEventListener('click', () => {
         const newOff = []; const newDef = []; const newGol = [];
         rosterTableBody.querySelectorAll('tr').forEach(tr => {
-            const [numEl, nameEl, posEl, colorEl] = tr.querySelectorAll('input, select');
+            const [numEl, nameEl, posEl] = tr.querySelectorAll('input, select');
             const num = parseInt(numEl.value, 10) || '';
             const name = nameEl.value.trim();
             const pos = posEl.value;
-            const color = colorEl.value || '#000000';
             if (!name) return;
-            if (pos === 'G') newGol.push({ number: num, name, color });
-            else if (pos === 'D') newDef.push({ number: num, name, color });
-            else newOff.push({ number: num, name, color });
+            if (pos === 'G') newGol.push({ number: num, name });
+            else if (pos === 'D') newDef.push({ number: num, name });
+            else newOff.push({ number: num, name });
         });
         rosters[editorTeam] = { offense: newOff, defense: newDef, goalies: newGol };
         saveRosters();
