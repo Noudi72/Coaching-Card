@@ -798,6 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wirePrintButton();
     wireSaveButton();
     wireColorButtons();
+    initializeTrainingScreen();
 });
 
 // Event Listener für Farb-Buttons im Header
@@ -809,4 +810,408 @@ function wireColorButtons() {
         });
     });
 }
+
+// Training Screen Funktionalität
+const TRAINING_STORAGE_KEY = 'coaching-card-training-v1';
+
+let trainingLines = [];
+let trainingPowerplay = [];
+
+function initializeTrainingScreen() {
+    const openTrainingBtn = document.getElementById('open-training');
+    const closeTrainingBtn = document.getElementById('close-training');
+    const trainingScreen = document.getElementById('training-screen');
+    const addLineBtn = document.getElementById('add-line');
+    const addPowerplayBtn = document.getElementById('add-powerplay');
+    const trainingTeamSelect = document.getElementById('training-team-select');
+    const trainingPrintBtn = document.getElementById('training-print-btn');
+    
+    if (!openTrainingBtn || !closeTrainingBtn || !trainingScreen) {
+        console.error('Training Screen Elemente nicht gefunden');
+        return;
+    }
+    
+    // Öffne Training Screen
+    openTrainingBtn.addEventListener('click', () => {
+        const startScreen = document.getElementById('start-screen');
+        if (startScreen) startScreen.style.display = 'none';
+        trainingScreen.classList.add('active');
+        loadTrainingData();
+        renderTrainingLines();
+        renderTrainingPowerplay();
+    });
+    
+    // Schließe Training Screen
+    closeTrainingBtn.addEventListener('click', () => {
+        trainingScreen.classList.remove('active');
+        const startScreen = document.getElementById('start-screen');
+        if (startScreen) startScreen.style.display = 'flex';
+        saveTrainingData();
+    });
+    
+    // Druck-Button für Training
+    if (trainingPrintBtn) {
+        trainingPrintBtn.addEventListener('click', () => {
+            // Verstecke Start-Screen falls sichtbar
+            const startScreen = document.getElementById('start-screen');
+            let startScreenDisplay = startScreen ? startScreen.style.display : 'none';
+            if (startScreen && startScreen.style.display !== 'none') {
+                startScreen.style.display = 'none';
+            }
+            
+            // Speichere vor dem Drucken
+            saveTrainingData();
+            
+            // Drucken
+            window.print();
+            
+            // Stelle Start-Screen wieder her
+            setTimeout(() => {
+                if (startScreen && startScreenDisplay !== 'none') {
+                    startScreen.style.display = startScreenDisplay;
+                }
+            }, 300);
+        });
+    }
+    
+    // Team-Wechsel
+    if (trainingTeamSelect) {
+        trainingTeamSelect.addEventListener('change', () => {
+            saveTrainingData();
+            loadTrainingData();
+            renderTrainingLines();
+            renderTrainingPowerplay();
+        });
+    }
+    
+    // Linie hinzufügen
+    if (addLineBtn) {
+        addLineBtn.addEventListener('click', () => {
+            console.log('Linie hinzufügen Button geklickt');
+            const currentTeam = trainingTeamSelect?.value || 'u21';
+            
+            // Prüfe, ob bereits 5 Linien vorhanden sind
+            const teamLines = trainingLines.filter(line => line.team === currentTeam);
+            if (teamLines.length >= 5) {
+                alert('Maximal 5 Linien erlaubt!');
+                return;
+            }
+            
+            const newLine = {
+                id: Date.now(),
+                team: currentTeam,
+                type: 'line',
+                players: {
+                    lw: { player: '', color: '' },
+                    c: { player: '', color: '' },
+                    rw: { player: '', color: '' },
+                    ld: { player: '', color: '' },
+                    rd: { player: '', color: '' }
+                }
+            };
+            trainingLines.push(newLine);
+            saveTrainingData();
+            renderTrainingLines();
+        });
+    } else {
+        console.error('add-line Button nicht gefunden');
+    }
+    
+    // Powerplay hinzufügen
+    if (addPowerplayBtn) {
+        addPowerplayBtn.addEventListener('click', () => {
+            const currentTeam = trainingTeamSelect?.value || 'u21';
+            const newPowerplay = {
+                id: Date.now(),
+                team: currentTeam,
+                type: 'powerplay',
+                players: {
+                    lw: { player: '', color: '' },
+                    c: { player: '', color: '' },
+                    rw: { player: '', color: '' },
+                    ld: { player: '', color: '' },
+                    rd: { player: '', color: '' }
+                }
+            };
+            trainingPowerplay.push(newPowerplay);
+            saveTrainingData();
+            renderTrainingPowerplay();
+        });
+    }
+}
+
+function renderTrainingLines() {
+    const linesList = document.getElementById('training-lines-list');
+    const trainingTeamSelect = document.getElementById('training-team-select');
+    const addLineBtn = document.getElementById('add-line');
+    if (!linesList || !trainingTeamSelect) return;
+    
+    const currentTeam = trainingTeamSelect.value;
+    const teamLines = trainingLines.filter(line => line.team === currentTeam);
+    
+    // Begrenze auf maximal 5 Linien
+    const linesToShow = teamLines.slice(0, 5);
+    
+    linesList.innerHTML = '';
+    
+    if (linesToShow.length === 0) {
+        linesList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Keine Linien vorhanden. Klicke auf "+ Linie hinzufügen" um eine neue Linie zu erstellen.</p>';
+    } else {
+        linesToShow.forEach((line, index) => {
+            const lineElement = createTrainingLineElement(line, index + 1);
+            linesList.appendChild(lineElement);
+        });
+    }
+    
+    // Deaktiviere Button wenn bereits 5 Linien vorhanden
+    if (addLineBtn) {
+        if (teamLines.length >= 5) {
+            addLineBtn.disabled = true;
+            addLineBtn.style.opacity = '0.5';
+            addLineBtn.style.cursor = 'not-allowed';
+        } else {
+            addLineBtn.disabled = false;
+            addLineBtn.style.opacity = '1';
+            addLineBtn.style.cursor = 'pointer';
+        }
+    }
+}
+
+function renderTrainingPowerplay() {
+    const powerplayList = document.getElementById('training-powerplay-list');
+    const trainingTeamSelect = document.getElementById('training-team-select');
+    if (!powerplayList || !trainingTeamSelect) return;
+    
+    const currentTeam = trainingTeamSelect.value;
+    const teamPowerplay = trainingPowerplay.filter(pp => pp.team === currentTeam);
+    
+    powerplayList.innerHTML = '';
+    
+    if (teamPowerplay.length === 0) {
+        powerplayList.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">Keine Powerplay-Linien vorhanden. Klicke auf "+ Powerplay hinzufügen" um eine neue Powerplay-Linie zu erstellen.</p>';
+        return;
+    }
+    
+    teamPowerplay.forEach((powerplay, index) => {
+        const powerplayElement = createTrainingLineElement(powerplay, index + 1);
+        powerplayList.appendChild(powerplayElement);
+    });
+}
+
+function createTrainingLineElement(line, lineNumber) {
+    const div = document.createElement('div');
+    div.className = 'training-line';
+    div.setAttribute('data-line-id', line.id);
+    
+    const header = document.createElement('div');
+    header.className = 'training-line-header';
+    
+    const number = document.createElement('span');
+    number.className = 'training-line-number';
+    const lineType = line.type === 'powerplay' ? 'Powerplay' : 'Linie';
+    
+    // Farben für Linien-Überschriften basierend auf Liniennummer
+    if (line.type === 'powerplay') {
+        // Powerplay bleibt schwarz
+        number.textContent = `${lineType} ${lineNumber}`;
+    } else {
+        // Normale Linien: 1,3 = Gelb, 2,4 = Rot, 5 = Blau
+        if (lineNumber === 1 || lineNumber === 3) {
+            number.className = 'training-line-number color-yellow';
+            number.textContent = `${lineType} ${lineNumber}`;
+        } else if (lineNumber === 2 || lineNumber === 4) {
+            number.className = 'training-line-number color-red';
+            number.textContent = `${lineType} ${lineNumber}`;
+        } else if (lineNumber === 5) {
+            number.className = 'training-line-number color-blue';
+            number.textContent = `${lineType} ${lineNumber}`;
+        } else {
+            number.textContent = `${lineType} ${lineNumber}`;
+        }
+    }
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'training-line-delete';
+    deleteBtn.textContent = 'Löschen';
+    deleteBtn.addEventListener('click', () => {
+        if (line.type === 'powerplay') {
+            trainingPowerplay = trainingPowerplay.filter(l => l.id !== line.id);
+        } else {
+            trainingLines = trainingLines.filter(l => l.id !== line.id);
+        }
+        saveTrainingData();
+        renderTrainingLines();
+        renderTrainingPowerplay();
+    });
+    
+    header.appendChild(number);
+    header.appendChild(deleteBtn);
+    
+    const playersContainer = document.createElement('div');
+    playersContainer.className = 'training-line-players';
+    
+    const positions = [
+        { key: 'lw', label: 'LW' },
+        { key: 'c', label: 'C' },
+        { key: 'rw', label: 'RW' },
+        { key: 'ld', label: 'LD' },
+        { key: 'rd', label: 'RD' }
+    ];
+    
+    positions.forEach(pos => {
+        const field = createTrainingPlayerField(line, pos.key, pos.label);
+        playersContainer.appendChild(field);
+    });
+    
+    div.appendChild(header);
+    div.appendChild(playersContainer);
+    
+    return div;
+}
+
+function createTrainingPlayerField(line, position, label) {
+    const field = document.createElement('div');
+    field.className = 'training-player-field';
+    
+    const labelEl = document.createElement('label');
+    labelEl.textContent = label;
+    
+    const select = document.createElement('select');
+    select.className = 'training-player-select';
+    select.setAttribute('data-line-id', line.id);
+    select.setAttribute('data-position', position);
+    
+    // Textausrichtung basierend auf Position
+    if (position === 'c') {
+        select.style.textAlign = 'center';
+        select.style.textAlignLast = 'center';
+    } else if (position === 'rw' || position === 'rd') {
+        select.style.textAlign = 'right';
+        select.style.textAlignLast = 'right';
+        select.style.direction = 'rtl';
+    }
+    
+    // Populate mit Spielern aus dem Roster
+    const trainingTeamSelect = document.getElementById('training-team-select');
+    const currentTeam = trainingTeamSelect?.value || 'u21';
+    populateTrainingPlayerSelect(select, currentTeam, position);
+    
+    // Setze gespeicherten Wert
+    if (line.players[position]?.player) {
+        select.value = line.players[position].player;
+    }
+    
+    // Alle Dropdowns sind schwarz (keine Farben mehr)
+    select.style.color = '#000000';
+    
+    select.addEventListener('change', () => {
+        if (!line.players[position]) line.players[position] = {};
+        line.players[position].player = select.value;
+        saveTrainingData();
+    });
+    
+    // Farbauswahl entfernt - keine colorSelector mehr
+    
+    field.appendChild(labelEl);
+    field.appendChild(select);
+    
+    return field;
+}
+
+function populateTrainingPlayerSelect(select, teamKey, position) {
+    select.innerHTML = '<option value="">-- Spieler wählen --</option>';
+    
+    if (!rosters[teamKey]) return;
+    
+    const team = rosters[teamKey];
+    let players = [];
+    
+    // Je nach Position Spieler auswählen
+    if (position === 'g') {
+        players = team.goalies || [];
+    } else if (position === 'ld' || position === 'rd') {
+        players = team.defense || [];
+    } else {
+        players = team.offense || [];
+    }
+    
+    // Für Training können auch alle Spieler verwendet werden
+    const allPlayers = [
+        ...(team.offense || []),
+        ...(team.defense || []),
+        ...(team.goalies || [])
+    ];
+    
+    // Füge alle Spieler hinzu (für Flexibilität)
+    allPlayers.forEach(player => {
+        const option = document.createElement('option');
+        option.value = `${player.number}-${player.name}`;
+        option.textContent = `#${player.number} ${player.name}`;
+        select.appendChild(option);
+    });
+}
+
+function saveTrainingData() {
+    try {
+        const data = {
+            lines: trainingLines,
+            powerplay: trainingPowerplay
+        };
+        localStorage.setItem(TRAINING_STORAGE_KEY, JSON.stringify(data));
+    } catch (e) {
+        console.error('Fehler beim Speichern der Trainingsdaten:', e);
+    }
+}
+
+function loadTrainingData() {
+    try {
+        const raw = localStorage.getItem(TRAINING_STORAGE_KEY);
+        if (raw) {
+            const data = JSON.parse(raw);
+            // Unterstütze alte Format (nur Array) und neues Format (Objekt)
+            if (Array.isArray(data)) {
+                trainingLines = data;
+                trainingPowerplay = [];
+            } else {
+                trainingLines = data.lines || [];
+                trainingPowerplay = data.powerplay || [];
+            }
+            
+            // Begrenze Linien auf maximal 5 pro Team
+            const teams = ['u18', 'u21'];
+            teams.forEach(team => {
+                const teamLines = trainingLines.filter(line => line.team === team);
+                if (teamLines.length > 5) {
+                    // Behalte nur die ersten 5 Linien
+                    const linesToKeep = teamLines.slice(0, 5).map(line => line.id);
+                    trainingLines = trainingLines.filter(line => 
+                        line.team !== team || linesToKeep.includes(line.id)
+                    );
+                }
+            });
+            
+            // Entferne Goalies aus alten Daten
+            trainingLines.forEach(line => {
+                if (line.players && line.players.g) {
+                    delete line.players.g;
+                }
+            });
+            trainingPowerplay.forEach(pp => {
+                if (pp.players && pp.players.g) {
+                    delete pp.players.g;
+                }
+            });
+            // Speichere bereinigte Daten
+            saveTrainingData();
+        } else {
+            trainingLines = [];
+            trainingPowerplay = [];
+        }
+    } catch (e) {
+        console.error('Fehler beim Laden der Trainingsdaten:', e);
+        trainingLines = [];
+        trainingPowerplay = [];
+    }
+}
+
 

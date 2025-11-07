@@ -31,6 +31,7 @@
                 <button class="start-btn" data-team="u21">U21-Elit</button>
                 <button id="add-player" class="start-btn secondary">+ Spieler</button>
                 <button id="save-roster" class="start-btn primary">Speichern & Karte öffnen</button>
+                <button id="open-training" class="start-btn secondary">Training</button>
             </div>
             <div class="roster-editor">
                 <h2>Roster bearbeiten</h2>
@@ -44,6 +45,53 @@
             </div>
         </div>
     </div>
+    
+    <!-- Training Screen -->
+    <div id="training-screen" class="training-screen">
+        <div class="training-card">
+            <div class="training-header">
+                <img src="public/appicon.png" alt="App Icon" class="training-logo" onerror="this.style.display='none'">
+                <h1 class="training-title">Training Lineup</h1>
+                <div class="training-header-actions">
+                    <button id="training-print-btn" class="start-btn primary">Drucken</button>
+                    <button id="close-training" class="start-btn secondary">Zurück zur Startseite</button>
+                </div>
+            </div>
+            
+            <div class="training-content">
+                <div class="training-team-selector">
+                    <label>
+                        <strong>Team auswählen:</strong>
+                        <select id="training-team-select">
+                            <option value="u18">U18-Elit</option>
+                            <option value="u21">U21-Elit</option>
+                        </select>
+                    </label>
+                </div>
+                
+                <div class="training-lines-container">
+                    <div class="training-lines-header">
+                        <h2>Linien</h2>
+                        <button id="add-line" class="start-btn secondary">+ Linie hinzufügen</button>
+                    </div>
+                    <div id="training-lines-list" class="training-lines-list">
+                        <!-- Linien werden hier dynamisch eingefügt -->
+                    </div>
+                </div>
+                
+                <div class="training-powerplay-container">
+                    <div class="training-lines-header">
+                        <h2>Powerplay</h2>
+                        <button id="add-powerplay" class="start-btn secondary">+ Powerplay hinzufügen</button>
+                    </div>
+                    <div id="training-powerplay-list" class="training-lines-list">
+                        <!-- Powerplay-Linien werden hier dynamisch eingefügt -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Seite 1 -->
     <div class="app-header">
         <div class="controls">
