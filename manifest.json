@@ -2,11 +2,12 @@
   "name": "Eishockey Coaching Card",
   "short_name": "Coaching Card",
   "description": "Digitale Coaching Card für Eishockey-Teams",
-  "start_url": "/",
+  "start_url": "/Coaching-Card/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1976d2",
   "orientation": "landscape",
+  "scope": "/Coaching-Card/",
   "icons": [
     {
       "src": "public/appicon.png",
