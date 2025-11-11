@@ -869,12 +869,22 @@ function initializeTrainingScreen() {
             // Markiere, dass Training gedruckt wird
             document.body.classList.add('printing-training');
             
+            // Füge @page-Regel für Training hinzu
+            const style = document.createElement('style');
+            style.id = 'training-print-page-style';
+            style.textContent = '@page { size: A4 portrait; margin: 3.5mm 5mm; }';
+            document.head.appendChild(style);
+            
             // Drucken
             window.print();
             
-            // Entferne Markierung und stelle Start-Screen wieder her
+            // Entferne Markierung, @page-Regel und stelle Start-Screen wieder her
             setTimeout(() => {
                 document.body.classList.remove('printing-training');
+                const trainingPageStyle = document.getElementById('training-print-page-style');
+                if (trainingPageStyle) {
+                    trainingPageStyle.remove();
+                }
                 if (startScreen && startScreenDisplay !== 'none') {
                     startScreen.style.display = startScreenDisplay;
                 }

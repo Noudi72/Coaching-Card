@@ -1490,8 +1490,8 @@ body {
         overflow: visible;
     }
     
-    /* Training Screen Print Styles */
-    .training-screen {
+    /* Training Screen Print Styles - nur wenn printing-training aktiv ist */
+    body.printing-training .training-screen {
         display: block !important;
         position: static;
         background: white;
@@ -1500,21 +1500,18 @@ body {
     }
     
     /* Verstecke Coaching Card beim Drucken der Trainingsseite */
-    .page {
+    body.printing-training .page {
         display: none !important;
     }
     
-    .app-header {
+    body.printing-training .app-header {
         display: none !important;
     }
     
-    /* Spezielle @page Einstellungen für Training */
-    @page {
-        size: A4 portrait;
-        margin: 3.5mm 5mm;
-    }
+    /* Spezielle @page Einstellungen für Training - wird per JavaScript dynamisch hinzugefügt */
     
-    .training-card {
+    /* Training Print Styles - nur wenn printing-training aktiv ist */
+    body.printing-training .training-card {
         box-shadow: none;
         padding: 2.5mm;
         max-height: none;
@@ -1523,53 +1520,53 @@ body {
         max-width: 100% !important;
     }
     
-    .training-header {
+    body.printing-training .training-header {
         margin-bottom: 0.8mm;
         padding-bottom: 0.3mm;
         border-bottom: 1px solid #000;
         page-break-after: avoid;
     }
     
-    .training-logo {
+    body.printing-training .training-logo {
         width: 26px !important;
         height: 26px !important;
         margin-right: 4px !important;
     }
     
-    .training-title {
+    body.printing-training .training-title {
         font-size: 12pt !important;
         margin: 0 !important;
     }
     
-    .training-header-actions,
-    .training-team-selector,
-    .training-lines-header button {
+    body.printing-training .training-header-actions,
+    body.printing-training .training-team-selector,
+    body.printing-training .training-lines-header button {
         display: none !important;
     }
     
-    .training-lines-header {
+    body.printing-training .training-lines-header {
         border-bottom: none !important;
         padding-bottom: 0 !important;
         margin-bottom: 0.5mm !important;
     }
     
-    .training-lines-header h2 {
+    body.printing-training .training-lines-header h2 {
         display: none !important;
     }
     
-    .training-powerplay-container {
+    body.printing-training .training-powerplay-container {
         margin-top: 0.8mm !important;
     }
     
-    .training-powerplay-container .training-lines-header h2 {
+    body.printing-training .training-powerplay-container .training-lines-header h2 {
         display: none !important;
     }
     
-    .training-lines-list {
+    body.printing-training .training-lines-list {
         gap: 1mm !important;
     }
     
-    .training-line {
+    body.printing-training .training-line {
         page-break-inside: avoid;
         margin-bottom: 1mm;
         border: none !important;
@@ -1577,80 +1574,80 @@ body {
         background: white;
     }
     
-    .training-line-header {
+    body.printing-training .training-line-header {
         border-bottom: 1px solid #000;
         padding-bottom: 0.3mm;
         margin-bottom: 0.5mm;
     }
     
-    .training-line-delete {
+    body.printing-training .training-line-delete {
         display: none !important;
     }
     
-    .training-line-number {
+    body.printing-training .training-line-number {
         font-size: 9.5pt;
         font-weight: bold;
     }
     
-    .training-line-number.color-yellow {
+    body.printing-training .training-line-number.color-yellow {
         color: #ffcc00 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
     
-    .training-line-number.color-red {
+    body.printing-training .training-line-number.color-red {
         color: #cc0000 !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
     
-    .training-line-number.color-blue {
+    body.printing-training .training-line-number.color-blue {
         color: #0066cc !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
     
-    .training-line-players {
+    body.printing-training .training-line-players {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 1mm;
     }
     
     /* Erste 3 Positionen (LW, C, RW) in einer Reihe, dann LD und RD in der nächsten */
-    .training-player-field:nth-child(1),
-    .training-player-field:nth-child(2),
-    .training-player-field:nth-child(3) {
+    body.printing-training .training-player-field:nth-child(1),
+    body.printing-training .training-player-field:nth-child(2),
+    body.printing-training .training-player-field:nth-child(3) {
         grid-row: 1;
     }
     
-    .training-player-field:nth-child(4),
-    .training-player-field:nth-child(5) {
+    body.printing-training .training-player-field:nth-child(4),
+    body.printing-training .training-player-field:nth-child(5) {
         grid-row: 2;
     }
     
     /* LD und RD zentrieren in der zweiten Reihe */
-    .training-player-field:nth-child(4) {
+    body.printing-training .training-player-field:nth-child(4) {
         grid-column: 1;
     }
     
-    .training-player-field:nth-child(5) {
+    body.printing-training .training-player-field:nth-child(5) {
         grid-column: 3;
     }
     
-    .training-player-field {
+    body.printing-training .training-player-field {
         display: flex;
         flex-direction: column;
         gap: 0.3mm;
     }
     
-    .training-player-field label {
+    body.printing-training .training-player-field label {
         font-size: 6.5pt;
         font-weight: bold;
         margin-bottom: 0;
         line-height: 1;
     }
     
-    .training-player-select {
+    body.printing-training .training-player-select {
         border: 1px solid #000 !important;
         background: white !important;
         padding: 0.5mm 0.7mm;
@@ -1666,33 +1663,33 @@ body {
         print-color-adjust: exact !important;
     }
     
-    /* Textausrichtung für Positionen beim Drucken */
-    .training-player-select[data-position="c"] {
+    /* Textausrichtung für Positionen beim Drucken - nur wenn printing-training aktiv ist */
+    body.printing-training .training-player-select[data-position="c"] {
         text-align: center !important;
         text-align-last: center !important;
         direction: ltr;
     }
     
-    .training-player-select[data-position="rw"],
-    .training-player-select[data-position="rd"] {
+    body.printing-training .training-player-select[data-position="rw"],
+    body.printing-training .training-player-select[data-position="rd"] {
         text-align: right !important;
         text-align-last: right !important;
         direction: rtl;
     }
     
-    .training-player-select[data-position="rw"] option,
-    .training-player-select[data-position="rd"] option {
+    body.printing-training .training-player-select[data-position="rw"] option,
+    body.printing-training .training-player-select[data-position="rd"] option {
         direction: ltr;
         text-align: right;
     }
     
-    .training-color-selector {
+    body.printing-training .training-color-selector {
         display: none !important;
     }
     
     /* Farben beim Drucken beibehalten - nur für Linien-Überschriften */
-    .training-player-select.color-yellow,
-    .training-player-select.color-red {
+    body.printing-training .training-player-select.color-yellow,
+    body.printing-training .training-player-select.color-red {
         color: #000000 !important;
     }
     
