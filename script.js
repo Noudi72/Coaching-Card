@@ -733,6 +733,10 @@ function wirePrintButton() {
             prevDisplay = start.style.display;
             start.style.display = 'none';
         }
+        
+        // Entferne Training-Markierung falls vorhanden
+        document.body.classList.remove('printing-training');
+        
         window.print();
         // restore overlay shortly after print dialog opens/closes
         setTimeout(() => {
@@ -862,11 +866,15 @@ function initializeTrainingScreen() {
             // Speichere vor dem Drucken
             saveTrainingData();
             
+            // Markiere, dass Training gedruckt wird
+            document.body.classList.add('printing-training');
+            
             // Drucken
             window.print();
             
-            // Stelle Start-Screen wieder her
+            // Entferne Markierung und stelle Start-Screen wieder her
             setTimeout(() => {
+                document.body.classList.remove('printing-training');
                 if (startScreen && startScreenDisplay !== 'none') {
                     startScreen.style.display = startScreenDisplay;
                 }

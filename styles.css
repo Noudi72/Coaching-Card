@@ -1255,6 +1255,18 @@ body {
     .training-screen {
         display: none !important;
     }
+    
+    /* Wenn Training gedruckt wird: Verstecke Coaching Card */
+    body.printing-training .app-header,
+    body.printing-training .controls,
+    body.printing-training .page {
+        display: none !important;
+    }
+    
+    /* Wenn Training gedruckt wird: Zeige Training-Seite */
+    body.printing-training .training-screen {
+        display: block !important;
+    }
 
     .page {
         width: 293mm; /* 297 - (2*1mm LR) - (2*1mm Padding) */
