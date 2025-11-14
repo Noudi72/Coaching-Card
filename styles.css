@@ -91,7 +91,7 @@ body {
 .training-title {
     flex: 1;
     margin: 0;
-    font-size: 24px;
+    font-size: 26px;
     color: #1976d2;
 }
 
@@ -117,7 +117,7 @@ body {
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 16px;
     background: white;
 }
 
@@ -146,7 +146,7 @@ body {
 
 .training-lines-header h2 {
     margin: 0;
-    font-size: 20px;
+    font-size: 22px;
     color: #333;
 }
 
@@ -176,7 +176,7 @@ body {
 
 .training-line-number {
     font-weight: bold;
-    font-size: 18px;
+    font-size: 20px;
     color: #1976d2;
 }
 
@@ -199,7 +199,7 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .training-line-delete:hover {
@@ -240,7 +240,7 @@ body {
 }
 
 .training-player-field label {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     color: #666;
     text-transform: uppercase;
@@ -250,7 +250,7 @@ body {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 16px;
     background: white;
     color: #000000 !important;
 }
@@ -290,7 +290,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     transition: all 0.2s;
 }
 
@@ -336,7 +336,7 @@ body {
 
 .controls select, .controls button {
     padding: 8px 12px;
-    font-size: 14px;
+    font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
@@ -368,7 +368,7 @@ body {
 }
 
 .color-label {
-    font-size: 12px;
+    font-size: 14px;
     margin-right: 4px;
     color: #666;
 }
@@ -381,7 +381,7 @@ body {
     border-radius: 4px;
     background: white;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -473,7 +473,7 @@ body {
 .section h2 {
     padding: 4px 6px;
     margin: -4px -4px 4px -4px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
     border-radius: 4px 4px 0 0;
@@ -530,7 +530,7 @@ body {
 /* Fields */
 .field {
     margin-bottom: 6px;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .penalty-line {
@@ -547,7 +547,7 @@ body {
 .field input {
     width: 100%;
     padding: 4px;
-    font-size: 11px;
+    font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 2px;
     margin-bottom: 3px;
@@ -562,7 +562,7 @@ body {
 .overtime-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 11px;
+    font-size: 13px;
 }
 
 .overtime-table td {
@@ -577,7 +577,7 @@ body {
     border-collapse: collapse;
     margin-top: 1px;
     margin-bottom: 1px;
-    font-size: 11px; /* match lineup */
+    font-size: 13px; /* match lineup */
     flex-shrink: 0;
 }
 
@@ -588,7 +588,7 @@ body {
 .setup-table select {
     width: 100%;
     padding: 4px;
-    font-size: 11px;
+    font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 2px;
     min-height: 22px;
@@ -596,7 +596,7 @@ body {
 
 /* Lineup */
 .lineup-lines {
-    font-size: 10px;
+    font-size: 12px;
     flex: 0 0 auto;
     min-height: 0;
     overflow: visible;
@@ -685,7 +685,7 @@ body {
 
 /* Global dropdown style & alignment */
 .player-select {
-    font-size: 11px !important;
+    font-size: 13px !important;
     padding: 4px;
     border: 1px solid #ccc;
     border-radius: 2px;
@@ -726,7 +726,7 @@ body {
     border-radius: 2px;
     background: white !important;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1;
     flex-shrink: 0;
     display: inline-block !important;
@@ -829,7 +829,7 @@ body {
 .forwards select {
     flex: 1;
     padding: 4px;
-    font-size: 11px;
+    font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 2px;
     min-height: 22px;
@@ -872,7 +872,7 @@ body {
 .defense select {
     flex: 1;
     padding: 4px;
-    font-size: 11px;
+    font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 2px;
     min-height: 22px;
@@ -915,7 +915,7 @@ body {
     flex: 1;
     min-width: 80px;
     padding: 4px;
-    font-size: 11px;
+    font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 2px;
     min-height: 22px;
@@ -950,7 +950,7 @@ body {
 
 /* Powerplay & Penalty Kill */
 .pp-units, .pk-units {
-    font-size: 10px;
+    font-size: 12px;
     flex: 0 0 auto;
     min-height: 0;
     overflow: visible;
@@ -975,7 +975,7 @@ body {
     flex: 1;
     min-width: 70px;
     padding: 4px;
-    font-size: 11px;
+    font-size: 13px;
     border: 1px solid #ccc;
     border-radius: 2px;
     min-height: 22px;
@@ -1040,7 +1040,7 @@ body {
     margin: 0 !important;
     padding: 1px !important;
     line-height: 1 !important;
-    font-size: 9px !important;
+    font-size: 13px !important;
     height: auto !important;
     min-height: 16px !important;
 }
@@ -1140,7 +1140,7 @@ body {
 
 .period strong {
     margin-bottom: 2px;
-    font-size: 10px;
+    font-size: 12px;
     flex-shrink: 0;
 }
 
@@ -1148,7 +1148,7 @@ body {
     flex: 1 1 auto;
     width: 100%;
     padding: 3px;
-    font-size: 9px;
+    font-size: 11px;
     border: 1px solid #ccc;
     border-radius: 2px;
     resize: none;
@@ -1194,7 +1194,7 @@ body {
 
 /* Player Select Dropdowns */
 .player-select {
-    font-size: 11px;
+    font-size: 13px;
     padding: 4px;
     border: 1px solid #ccc;
     border-radius: 2px;
@@ -1464,9 +1464,9 @@ body {
         print-color-adjust: exact;
     }
     /* kompaktere Überschriften und Felder für Seite 1 Höhe */
-    .section h2 { padding: 3px 4px; margin: -4px -4px 3px -4px; font-size: 11px; }
+    .section h2 { padding: 3px 4px; margin: -4px -4px 3px -4px; font-size: 13px; }
     .field { margin-bottom: 4px; }
-    .field input { padding: 3px; min-height: 18px; font-size: 10px; }
+    .field input { padding: 3px; min-height: 18px; font-size: 12px; }
 
     .rink-image.rotated {
         width: 100%;
@@ -1534,7 +1534,7 @@ body {
     }
     
     body.printing-training .training-title {
-        font-size: 12pt !important;
+        font-size: 14pt !important;
         margin: 0 !important;
     }
     
@@ -1585,7 +1585,7 @@ body {
     }
     
     body.printing-training .training-line-number {
-        font-size: 9.5pt;
+        font-size: 11.5pt;
         font-weight: bold;
     }
     
@@ -1641,7 +1641,7 @@ body {
     }
     
     body.printing-training .training-player-field label {
-        font-size: 6.5pt;
+        font-size: 8.5pt;
         font-weight: bold;
         margin-bottom: 0;
         line-height: 1;
@@ -1651,7 +1651,7 @@ body {
         border: 1px solid #000 !important;
         background: white !important;
         padding: 0.5mm 0.7mm;
-        font-size: 7.5pt;
+        font-size: 9.5pt;
         min-height: 0;
         height: auto;
         line-height: 1.15;
@@ -1707,7 +1707,7 @@ body {
 .setup-table select {
     width: 100%;
     padding: 4px;
-    font-size: 11px !important; /* match lineup and override browser defaults */
+    font-size: 13px !important; /* match lineup and override browser defaults */
     line-height: 1.2;
     height: 22px;
     min-height: 22px;
@@ -1731,7 +1731,7 @@ body {
     border-collapse: collapse;
     margin-top: 1px;
     margin-bottom: 1px;
-    font-size: 11px; /* match lineup */
+    font-size: 13px; /* match lineup */
     flex-shrink: 0;
 }
 .setup-table td { padding: 2px; }
@@ -1745,7 +1745,7 @@ body {
 /* Force identical Lineup font-sizing for all 6:5 Setup selects */
 .setup-1 select.player-select,
 .setup-2 select.player-select {
-    font-size: 11px !important;
+    font-size: 13px !important;
     line-height: 1.2 !important;
     height: 22px !important;
     padding: 4px !important;
@@ -1754,13 +1754,13 @@ body {
 }
 .setup-1 select.player-select option,
 .setup-2 select.player-select option {
-    font-size: 11px !important;
+    font-size: 13px !important;
     font-family: inherit !important;
 }
 /* Catch any setup selects without the class just in case */
 .setup-1 select,
 .setup-2 select {
-    font-size: 11px !important;
+    font-size: 13px !important;
     height: 22px !important;
     padding: 4px !important;
     box-sizing: border-box !important;
